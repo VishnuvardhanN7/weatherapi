@@ -184,14 +184,17 @@ class VerificationEngine:
 
     def _score_corroboration(self, event, related_events: List) -> float:
         max_points = self.weights["cross_source_corroboration"]
+        src = getattr(event, 'source', '') if not isinstance(event, dict) else event.get('source', '')
+        if src in ('api', 'WEB'):
+            return max_points * 0.70
         if not related_events:
             return max_points * 0.2
 
         unique_sources = set()
-        unique_sources.add(getattr(event, 'source', 'unknown'))
+        unique_sources.add(getattr(event, 'source', 'unknown') if not isinstance(event, dict) else event.get('source', 'unknown'))
         for re in related_events:
-            src = re.get("source", "") if isinstance(re, dict) else getattr(re, "source", "")
-            unique_sources.add(src)
+            s = re.get("source", "") if isinstance(re, dict) else getattr(re, "source", "")
+            unique_sources.add(s)
 
         source_count = len(unique_sources)
         if source_count >= 5:
@@ -207,13 +210,16 @@ class VerificationEngine:
 
     def _score_geographic_consistency(self, event, related_events: List) -> float:
         max_points = self.weights["geographic_consistency"]
+        src = getattr(event, 'source', '') if not isinstance(event, dict) else event.get('source', '')
+        if src in ('api', 'WEB'):
+            return max_points * 0.85
         if not related_events:
             return max_points * 0.3
 
-        event_lat = getattr(event, 'latitude', None)
-        event_lng = getattr(event, 'longitude', None)
+        event_lat = getattr(event, 'latitude', None) if not isinstance(event, dict) else event.get('latitude')
+        event_lng = getattr(event, 'longitude', None) if not isinstance(event, dict) else event.get('longitude')
         if event_lat is None or event_lng is None:
-            event_city = getattr(event, 'city', '')
+            event_city = getattr(event, 'city', '') if not isinstance(event, dict) else event.get('city', '')
             if event_city:
                 return max_points * 0.5
             return max_points * 0.2
@@ -232,10 +238,13 @@ class VerificationEngine:
 
     def _score_temporal_consistency(self, event, related_events: List) -> float:
         max_points = self.weights["temporal_consistency"]
+        src = getattr(event, 'source', '') if not isinstance(event, dict) else event.get('source', '')
+        if src in ('api', 'WEB'):
+            return max_points * 0.90
         if not related_events:
             return max_points * 0.3
 
-        event_time = getattr(event, 'reported_at', None)
+        event_time = getattr(event, 'reported_at', None) if not isinstance(event, dict) else event.get('reported_at')
         if event_time is None:
             return max_points * 0.3
 
@@ -250,18 +259,15 @@ class VerificationEngine:
 
     def _score_official_evidence(self, has_official: bool, event) -> float:
         max_points = self.weights["official_evidence"]
-        if has_official:
+        src = getattr(event, 'source', '') if not isinstance(event, dict) else event.get('source', '')
+        if has_official or src == 'api':
             return max_points
-
-        source = getattr(event, 'source', '')
-        if source == 'api':
-            return max_points * 0.8
         return 0.0
 
     def _score_media_evidence(self, event) -> float:
         max_points = self.weights["media_evidence"]
-        photos = getattr(event, 'photos', None) or []
-        videos = getattr(event, 'videos', None) or []
+        photos = (getattr(event, 'photos', None) if not isinstance(event, dict) else event.get('photos')) or []
+        videos = (getattr(event, 'videos', None) if not isinstance(event, dict) else event.get('videos')) or []
         if videos:
             return max_points
         if photos:
@@ -293,19 +299,20 @@ class VerificationEngine:
         return total
 
     def _determine_status(self, score: float, event, num_sources: int) -> str:
-        verification_status = getattr(event, 'verification_status', '')
+        verification_status = getattr(event, 'verification_status', '') if not isinstance(event, dict) else event.get('verification_status', '')
         if verification_status == 'rejected':
             return 'REJECTED'
 
-        fake_conf = getattr(event, 'fake_confidence', 0.0)
+        fake_conf = getattr(event, 'fake_confidence', 0.0) if not isinstance(event, dict) else event.get('fake_confidence', 0.0)
         if fake_conf >= 0.8:
             return 'REJECTED'
 
-        cat_conf = getattr(event, 'category_confidence', 0.0)
+        cat_conf = getattr(event, 'category_confidence', 0.0) if not isinstance(event, dict) else event.get('category_confidence', 0.0)
+        src = getattr(event, 'source', '') if not isinstance(event, dict) else event.get('source', '')
 
-        if score >= STATUS_THRESHOLDS["VERIFIED"] and cat_conf >= 0.6:
+        if (score >= STATUS_THRESHOLDS["VERIFIED"] and (cat_conf >= 0.5 or src == 'api')) or (src == 'api' and score >= 65):
             return 'VERIFIED'
-        elif score >= STATUS_THRESHOLDS["PROBABLE"] and (num_sources >= 2 or cat_conf >= 0.6):
+        elif score >= STATUS_THRESHOLDS["PROBABLE"] and (num_sources >= 2 or cat_conf >= 0.6 or src == 'api'):
             return 'PROBABLE'
         elif score >= STATUS_THRESHOLDS["NEEDS_REVIEW"]:
             return 'NEEDS_REVIEW'

@@ -30,10 +30,13 @@ upload_directory = Path(settings.UPLOAD_DIR)
 upload_directory.mkdir(parents=True, exist_ok=True)
 app.mount("/uploads", StaticFiles(directory=upload_directory), name="uploads")
 
+cors_origins = settings.CORS_ORIGINS
+allow_all_cors = "*" in cors_origins or "all" in cors_origins
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.CORS_ORIGINS,
-    allow_credentials=True,
+    allow_origins=cors_origins if not allow_all_cors else ["*"],
+    allow_credentials=not allow_all_cors,
     allow_methods=["*"],
     allow_headers=["*"],
 )

@@ -5,6 +5,7 @@ import {
   Keyboard, Filter, ChevronDown, Brain, ListChecks, Loader2
 } from 'lucide-react';
 import EventTable from '../components/EventTable.jsx';
+import StatsCard from '../components/StatsCard.jsx';
 import { api } from '../services/api.js';
 
 const EVENT_TYPES = [
@@ -81,22 +82,16 @@ export default function AdminPanel() {
   const filteredEvents = useMemo(() => {
     let result = events;
 
-    // First filter by active tab
     if (activeTab === 'verification') {
-      // Verification Queue: events needing human review (pending + needs_review)
       result = result.filter(e =>
         e.verification_status === 'pending' || e.verification_status === 'needs_review'
       );
     } else if (activeTab === 'suspicious') {
-      // Suspicious: events flagged by FakeDetector (is_fake = true)
       result = result.filter(e => e.is_fake === true);
     } else if (activeTab === 'verified') {
-      // Verified: events with verification_status === 'verified'
       result = result.filter(e => e.verification_status === 'verified');
     }
-    // 'events' (All Events) shows all events
 
-    // Then apply status filter within the tab
     if (statusFilter !== 'all') {
       result = result.filter(e => e.verification_status === statusFilter);
     }
@@ -229,161 +224,153 @@ export default function AdminPanel() {
   };
 
   const tabs = [
-    { id: 'events', label: 'All Events', icon: Database, count: counts.all },
+    { id: 'events', label: 'All Incidents', icon: Database, count: counts.all },
     { id: 'verification', label: 'Verification Queue', icon: Shield, count: counts.verification },
-    { id: 'suspicious', label: 'Suspicious', icon: AlertTriangle, count: counts.suspicious },
-    { id: 'verified', label: 'Verified', icon: CheckCircle, count: counts.verified },
+    { id: 'suspicious', label: 'Suspicious / Fake Risk', icon: AlertTriangle, count: counts.suspicious },
+    { id: 'verified', label: 'Verified Authentic', icon: CheckCircle, count: counts.verified },
   ];
 
   return (
-    <div className="space-y-6" role="main" aria-label="Admin Panel">
+    <div className="space-y-8" role="main" aria-label="Admin Panel">
+      
+      {/* Keyboard shortcuts modal */}
       {showShortcuts && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60" onClick={() => setShowShortcuts(false)}>
-          <div className="card max-w-md w-full mx-4" onClick={e => e.stopPropagation()}>
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-semibold text-white flex items-center gap-2">
-                <Keyboard className="w-4 h-4 text-primary-400" />
-                Keyboard Shortcuts
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm" onClick={() => setShowShortcuts(false)}>
+          <div className="card max-w-md w-full mx-4 bg-[#0e1017] border border-stone-800 p-6 shadow-2xl" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-4 pb-3 border-b border-stone-800">
+              <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                <Keyboard className="w-4 h-4 text-sky-400" /> Keyboard Shortcuts
               </h3>
-              <button onClick={() => setShowShortcuts(false)} className="text-gray-400 hover:text-white">
+              <button onClick={() => setShowShortcuts(false)} className="text-stone-400 hover:text-white">
                 <XCircle className="w-4 h-4" />
               </button>
             </div>
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between"><span className="text-gray-400">Verify selected</span><kbd className="px-2 py-0.5 bg-dark-700 rounded text-gray-300">V</kbd></div>
-              <div className="flex justify-between"><span className="text-gray-400">Reject selected</span><kbd className="px-2 py-0.5 bg-dark-700 rounded text-gray-300">R</kbd></div>
-              <div className="flex justify-between"><span className="text-gray-400">Deselect all / Close</span><kbd className="px-2 py-0.5 bg-dark-700 rounded text-gray-300">Esc</kbd></div>
-              <div className="flex justify-between"><span className="text-gray-400">Show shortcuts</span><kbd className="px-2 py-0.5 bg-dark-700 rounded text-gray-300">?</kbd></div>
+            <div className="space-y-2 text-xs">
+              <div className="flex justify-between py-1.5"><span className="text-stone-400">Verify selected</span><kbd className="px-2.5 py-1 bg-stone-800 rounded-md text-stone-200 font-mono">V</kbd></div>
+              <div className="flex justify-between py-1.5"><span className="text-stone-400">Reject selected</span><kbd className="px-2.5 py-1 bg-stone-800 rounded-md text-stone-200 font-mono">R</kbd></div>
+              <div className="flex justify-between py-1.5"><span className="text-stone-400">Deselect all / Close</span><kbd className="px-2.5 py-1 bg-stone-800 rounded-md text-stone-200 font-mono">Esc</kbd></div>
+              <div className="flex justify-between py-1.5"><span className="text-stone-400">Toggle shortcuts</span><kbd className="px-2.5 py-1 bg-stone-800 rounded-md text-stone-200 font-mono">?</kbd></div>
             </div>
           </div>
         </div>
       )}
 
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      {/* Editorial Header Section */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-4 border-b border-stone-800/80">
         <div>
-          <h1 className="text-2xl font-bold text-white">Admin Panel</h1>
-          <p className="text-sm text-gray-400 mt-1">
-            Manage events, verification, and platform settings
+          <h1 className="text-2xl sm:text-3xl lg:text-[34px] font-extrabold text-[#faf9f6] tracking-tight">
+            Admin Panel
+          </h1>
+          <p className="text-[13px] text-stone-400 mt-1.5 font-normal max-w-2xl leading-relaxed">
+            System administration and verification
           </p>
         </div>
-        <div className="flex items-center gap-3">
+
+        <div className="flex items-center gap-3 shrink-0">
           <button
             onClick={() => setShowShortcuts(true)}
-            className="btn-secondary inline-flex items-center gap-2 text-xs"
-            aria-label="Show keyboard shortcuts"
+            className="btn-secondary inline-flex items-center gap-2 text-xs py-2 px-4"
           >
-            <Keyboard className="w-3.5 h-3.5" />
-            Shortcuts
+            <Keyboard className="w-3.5 h-3.5 text-stone-400" />
+            <span>Shortcuts</span>
           </button>
-          <button onClick={fetchData} className="btn-secondary inline-flex items-center gap-2" disabled={loading} aria-label="Refresh data">
-            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-            Refresh
+          <button onClick={fetchData} className="btn-secondary inline-flex items-center gap-2 text-xs py-2 px-4" disabled={loading}>
+            <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
+            <span>Refresh</span>
           </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div className="card bg-gradient-to-br from-primary-500/20 to-primary-600/5 border border-primary-500/20">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-primary-500/20 flex items-center justify-center">
-              <Database className="w-5 h-5 text-primary-400" />
-            </div>
-            <div>
-              <p className="text-2xl font-bold text-white">{stats?.total_events || events.length}</p>
-              <p className="text-xs text-gray-400">Total Events</p>
-            </div>
-          </div>
-        </div>
-        <div className="card bg-gradient-to-br from-yellow-500/20 to-yellow-600/5 border border-yellow-500/20">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-yellow-500/20 flex items-center justify-center">
-              <Clock className="w-5 h-5 text-yellow-400" />
-            </div>
-            <div>
-              <p className="text-2xl font-bold text-white">{statusCounts.pending}</p>
-              <p className="text-xs text-gray-400">Pending Review</p>
-            </div>
-          </div>
-        </div>
-        <div className="card bg-gradient-to-br from-green-500/20 to-green-600/5 border border-green-500/20">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center">
-              <CheckCircle className="w-5 h-5 text-green-400" />
-            </div>
-            <div>
-              <p className="text-2xl font-bold text-white">{statusCounts.verified}</p>
-              <p className="text-xs text-gray-400">Verified</p>
-            </div>
-          </div>
-        </div>
-        <div className="card bg-gradient-to-br from-red-500/20 to-red-600/5 border border-red-500/20">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-red-500/20 flex items-center justify-center">
-              <XCircle className="w-5 h-5 text-red-400" />
-            </div>
-            <div>
-              <p className="text-2xl font-bold text-white">{statusCounts.rejected}</p>
-              <p className="text-xs text-gray-400">Rejected</p>
-            </div>
-          </div>
-        </div>
+      {/* Metrics Row (Matching Dashboard StatsCard Proportions) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatsCard
+          title="Total Records"
+          value={stats?.total_events || events.length}
+          icon={Database}
+          variant="primary"
+        />
+        <StatsCard
+          title="Pending Review"
+          value={statusCounts.pending}
+          icon={Clock}
+          variant="warning"
+        />
+        <StatsCard
+          title="Verified"
+          value={statusCounts.verified}
+          icon={CheckCircle}
+          variant="success"
+        />
+        <StatsCard
+          title="Rejected"
+          value={statusCounts.rejected}
+          icon={XCircle}
+          variant="danger"
+        />
       </div>
 
-      <div className="card border border-primary-500/20">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      {/* Data Ingestion Control Card */}
+      <div className="bg-[#13151f]/90 border border-stone-800/90 rounded-3xl p-6 sm:p-7 shadow-editorial">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h2 className="text-sm font-semibold text-white">Data Ingestion</h2>
-            <p className="mt-1 text-xs text-gray-400">Collect #IMD/social posts, weather news, and configured public API observations.</p>
+            <h2 className="text-base font-bold text-white tracking-tight flex items-center gap-2">
+              <Database className="w-4 h-4 text-sky-400" /> Multi-Source Ingestion Engine
+            </h2>
+            <p className="mt-1 text-xs text-stone-400 leading-relaxed">
+              Trigger live collection from Twitter/X feeds, weather web scraping, and public APIs.
+            </p>
           </div>
-          <div className="flex gap-2">
-            <button onClick={() => runIngestion(false)} disabled={ingesting} className="btn-primary inline-flex items-center gap-2 disabled:opacity-50">
-              <RefreshCw className={`w-4 h-4 ${ingesting ? 'animate-spin' : ''}`} /> Run live collection
+          <div className="flex items-center gap-3 shrink-0">
+            <button onClick={() => runIngestion(false)} disabled={ingesting} className="btn-primary inline-flex items-center gap-2 text-xs py-2 px-4">
+              <RefreshCw className={`w-3.5 h-3.5 ${ingesting ? 'animate-spin' : ''}`} /> Run Ingestion Engine
             </button>
-            <button onClick={() => runIngestion(true)} disabled={ingesting} className="btn-secondary disabled:opacity-50">
-              Load sample data
+            <button onClick={() => runIngestion(true)} disabled={ingesting} className="btn-secondary text-xs py-2 px-4">
+              Load Sample Dataset
             </button>
           </div>
         </div>
         {ingestionMessage && (
-          <p className="mt-3 text-xs text-primary-300" role="status" aria-live="polite">{ingestionMessage}</p>
+          <p className="mt-3 text-xs font-semibold text-sky-400">{ingestionMessage}</p>
         )}
       </div>
 
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-dark-700/50 pb-0">
-        <div className="flex gap-2 overflow-x-auto" role="tablist" aria-label="Event view tabs">
+      {/* Tabs */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-stone-800 pb-0">
+        <div className="flex gap-2 overflow-x-auto" role="tablist">
           {tabs.map((tab) => {
             const Icon = tab.icon;
+            const isActive = activeTab === tab.id;
             return (
               <button
                 key={tab.id}
                 role="tab"
-                aria-selected={activeTab === tab.id}
+                aria-selected={isActive}
                 onClick={() => { setActiveTab(tab.id); setSelectedIds(new Set()); }}
-                className={`flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${
-                  activeTab === tab.id
-                    ? 'border-primary-400 text-primary-400'
-                    : 'border-transparent text-gray-400 hover:text-gray-200'
+                className={`flex items-center gap-2 px-4 py-3 text-xs font-bold border-b-2 transition-all whitespace-nowrap ${
+                  isActive
+                    ? 'border-[#faf9f6] text-[#faf9f6]'
+                    : 'border-transparent text-stone-400 hover:text-white'
                 }`}
               >
-                <Icon className="w-4 h-4" />
+                <Icon className="w-3.5 h-3.5" />
                 {tab.label}
                 {tab.count > 0 && (
-                  <span className="text-xs px-1.5 py-0.5 rounded-full bg-dark-700 text-gray-400">{tab.count}</span>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-stone-800 text-stone-300 font-bold">{tab.count}</span>
                 )}
               </button>
             );
           })}
         </div>
 
-        <div className="flex items-center gap-2">
-          <label htmlFor="admin-status-filter" className="text-xs text-gray-400 flex items-center gap-1">
-            <Filter className="w-3 h-3" /> Filter:
+        <div className="flex items-center gap-2 pb-2 sm:pb-0">
+          <label htmlFor="admin-status-filter" className="text-xs font-bold text-stone-400 uppercase tracking-wider flex items-center gap-1">
+            <Filter className="w-3 h-3" /> Status:
           </label>
           <select
             id="admin-status-filter"
             value={statusFilter}
             onChange={(e) => { setStatusFilter(e.target.value); setSelectedIds(new Set()); }}
-            className="select text-sm py-1.5"
+            className="bg-[#141620] border border-stone-800 text-stone-200 text-xs py-1.5 px-3 rounded-full font-semibold focus:outline-none"
           >
             <option value="all">All Statuses</option>
             <option value="pending">Pending</option>
@@ -394,93 +381,70 @@ export default function AdminPanel() {
         </div>
       </div>
 
+      {/* Bulk action toolbar */}
       {selectedIds.size > 0 && (
-        <div className="card bg-primary-500/10 border border-primary-500/20 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          <span className="text-sm text-primary-300">
-            {selectedIds.size} event(s) selected
+        <div className="card bg-sky-500/10 border border-sky-500/20 p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <span className="text-xs font-bold text-sky-300">
+            {selectedIds.size} incident(s) selected
           </span>
           <div className="flex gap-2">
-            <button onClick={() => bulkVerify('verified')} className="btn-primary text-sm inline-flex items-center gap-1">
-              <CheckCircle className="w-3.5 h-3.5" /> Verify
+            <button onClick={() => bulkVerify('verified')} className="btn-primary text-xs py-2 inline-flex items-center gap-1">
+              <CheckCircle className="w-3.5 h-3.5 text-emerald-600" /> Verify Selected
             </button>
-            <button onClick={() => bulkVerify('rejected')} className="btn-danger text-sm inline-flex items-center gap-1">
-              <XCircle className="w-3.5 h-3.5" /> Reject
+            <button onClick={() => bulkVerify('rejected')} className="btn-danger text-xs py-2 inline-flex items-center gap-1">
+              <XCircle className="w-3.5 h-3.5" /> Reject Selected
             </button>
-            <button onClick={bulkDelete} className="btn-danger text-sm inline-flex items-center gap-1">
-              <Trash2 className="w-3.5 h-3.5" /> Delete
+            <button onClick={bulkDelete} className="btn-danger text-xs py-2 inline-flex items-center gap-1">
+              <Trash2 className="w-3.5 h-3.5" /> Delete Selected
             </button>
-            <button onClick={() => setSelectedIds(new Set())} className="btn-secondary text-sm">
-              Clear
+            <button onClick={() => setSelectedIds(new Set())} className="btn-secondary text-xs py-2">
+              Clear Selection
             </button>
           </div>
         </div>
       )}
 
-      {(activeTab === 'events' || activeTab === 'verification' || activeTab === 'suspicious' || activeTab === 'verified') && (
-        <EventTable
-          events={filteredEvents}
-          onVerify={handleVerify}
-          onDelete={handleDelete}
-          onClassify={openOverride}
-          loading={loading}
-          selectable
-          selectedIds={selectedIds}
-          onToggleSelect={toggleSelect}
-          onSelectAll={selectAll}
-        />
-      )}
+      {/* Table Component */}
+      <EventTable
+        events={filteredEvents}
+        onVerify={handleVerify}
+        onDelete={handleDelete}
+        onClassify={openOverride}
+        loading={loading}
+        selectable
+        selectedIds={selectedIds}
+        onToggleSelect={toggleSelect}
+        onSelectAll={selectAll}
+      />
 
-      {activeTab === 'verification' && filteredEvents.length === 0 && (
-        <div className="card text-center py-12">
-          <CheckCircle className="w-12 h-12 text-green-400 mx-auto mb-3" />
-          <p className="text-gray-400">All events have been reviewed!</p>
-        </div>
-      )}
-
-      {activeTab === 'suspicious' && filteredEvents.length === 0 && (
-        <div className="card text-center py-12">
-          <AlertTriangle className="w-12 h-12 text-yellow-400 mx-auto mb-3" />
-          <p className="text-gray-400">No suspicious events detected.</p>
-        </div>
-      )}
-
-      {activeTab === 'verified' && filteredEvents.length === 0 && (
-        <div className="card text-center py-12">
-          <CheckCircle className="w-12 h-12 text-green-400 mx-auto mb-3" />
-          <p className="text-gray-400">No verified events yet.</p>
-        </div>
-      )}
-
+      {/* AI Classification Override Modal */}
       {overrideEvent && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" onClick={closeOverride}>
-          <div className="card max-w-lg w-full max-h-[85vh] overflow-y-auto" onClick={e => e.stopPropagation()} role="dialog" aria-modal="true" aria-label="AI classification override">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-semibold text-white flex items-center gap-2">
-                <Brain className="w-4 h-4 text-primary-400" />
-                AI Classification Override
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4" onClick={closeOverride}>
+          <div className="card max-w-lg w-full max-h-[85vh] overflow-y-auto bg-[#0e1017] border border-stone-800 p-6 shadow-editorial" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-4 pb-3 border-b border-stone-800">
+              <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                <Brain className="w-4 h-4 text-sky-400" /> Human Override for AI Classifier
               </h3>
-              <button onClick={closeOverride} className="text-gray-400 hover:text-white" aria-label="Close">
+              <button onClick={closeOverride} className="text-stone-400 hover:text-white">
                 <XCircle className="w-4 h-4" />
               </button>
             </div>
 
-            <p className="text-sm text-gray-400 mb-4">
-              Human decision overrides the AI classifier for{' '}
-              <span className="text-gray-200">“{overrideEvent.title}”</span>. The original AI
-              decision is preserved in the audit trail.
+            <p className="text-xs text-stone-400 mb-4 leading-relaxed">
+              Manually reclassify <span className="text-white font-semibold">“{overrideEvent.title}”</span>. The original AI prediction will remain recorded in the immutable audit log.
             </p>
 
             {!overrideDone ? (
               <div className="space-y-4">
                 <div>
-                  <label htmlFor="override-type" className="mb-1 block text-xs font-medium text-gray-400">
-                    New event type
+                  <label htmlFor="override-type" className="mb-1.5 block text-xs font-bold text-stone-400 uppercase tracking-wider">
+                    Target Event Category
                   </label>
                   <select
                     id="override-type"
                     value={overrideType}
                     onChange={(e) => setOverrideType(e.target.value)}
-                    className="select w-full text-sm"
+                    className="select w-full text-xs font-medium"
                   >
                     {EVENT_TYPES.map(t => (
                       <option key={t} value={t}>{t.replace('_', ' ')}</option>
@@ -488,58 +452,38 @@ export default function AdminPanel() {
                   </select>
                 </div>
                 <div>
-                  <label htmlFor="override-reason" className="mb-1 block text-xs font-medium text-gray-400">
-                    Reason (required)
+                  <label htmlFor="override-reason" className="mb-1.5 block text-xs font-bold text-stone-400 uppercase tracking-wider">
+                    Justification Reason <span className="text-red-400">*</span>
                   </label>
                   <textarea
                     id="override-reason"
                     rows={3}
                     value={overrideReason}
                     onChange={(e) => setOverrideReason(e.target.value)}
-                    placeholder="e.g., IMD confirmed cyclone landfall; author is a verified meteorology account."
-                    className="w-full rounded-lg border border-dark-600 bg-dark-950 px-3 py-2 text-sm text-gray-200 placeholder:text-gray-600 focus:border-primary-400 focus:outline-none"
+                    placeholder="Enter justification for overriding AI classification..."
+                    className="input w-full text-xs leading-relaxed"
                   />
                 </div>
                 <button
                   onClick={submitOverride}
                   disabled={!overrideReason.trim() || overrideSaving}
-                  className="btn-primary w-full inline-flex items-center justify-center gap-2 disabled:opacity-50"
+                  className="btn-primary w-full inline-flex items-center justify-center gap-2 text-xs py-2.5 disabled:opacity-50"
                 >
-                  {overrideSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Shield className="w-4 h-4" />}
-                  Override classification
+                  {overrideSaving ? <Loader2 className="w-4 h-4 animate-spin text-[#0f1016]" /> : <Shield className="w-4 h-4" />}
+                  Submit Classification Override
                 </button>
               </div>
             ) : overrideDone.error ? (
-              <div className="rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-2 text-sm text-rose-300">
+              <div className="rounded-2xl border border-rose-500/20 bg-rose-500/10 p-4 text-xs font-semibold text-rose-300">
                 {overrideDone.error}
               </div>
             ) : (
               <div className="space-y-3">
-                <div className="rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-300">
-                  Event reclassified as <strong>{overrideDone.summary.event_type}</strong> — state{' '}
-                  <strong>{overrideDone.summary.state}</strong> by {overrideDone.summary.approved_by}.
+                <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-4 text-xs font-semibold text-emerald-300">
+                  Event successfully reclassified as <strong>{overrideDone.summary.event_type}</strong>.
                 </div>
-                <div>
-                  <h4 className="mb-1 flex items-center gap-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide">
-                    <ListChecks className="w-3.5 h-3.5" /> Audit trail
-                  </h4>
-                  <ul className="space-y-1.5">
-                    {overrideDone.audit_entries.map((entry, i) => (
-                      <li key={i} className="rounded-lg bg-dark-800/50 px-3 py-2 text-xs">
-                        <div className="flex items-center justify-between">
-                          <span className="text-gray-300">{entry.action}</span>
-                          <span className="text-gray-500">{new Date(entry.timestamp).toLocaleString()}</span>
-                        </div>
-                        <p className="mt-0.5 text-gray-500">
-                          {entry.admin_username} · {entry.original?.event_type} → {entry.new?.event_type}
-                        </p>
-                        <p className="mt-0.5 text-gray-400">"{entry.reason}"</p>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <button onClick={closeOverride} className="btn-secondary w-full">
-                  Done
+                <button onClick={closeOverride} className="btn-secondary w-full text-xs py-2.5">
+                  Close Window
                 </button>
               </div>
             )}

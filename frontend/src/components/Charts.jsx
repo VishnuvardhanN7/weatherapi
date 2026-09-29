@@ -1,20 +1,21 @@
 import React from 'react';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
-  LineChart, Line, PieChart, Pie, Cell, ResponsiveContainer,
+  PieChart, Pie, Cell, ResponsiveContainer,
   AreaChart, Area, RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis
 } from 'recharts';
 
-const COLORS = ['#3b82f6', '#8b5cf6', '#06b6d4', '#ef4444', '#f59e0b', '#10b981', '#ec4899', '#6366f1', '#d946ef'];
+// Restrained neutral & weather palette (blue/cyan for weather data)
+const WEATHER_COLORS = ['#38bdf8', '#0284c7', '#06b6d4', '#6366f1', '#a855f7', '#059669', '#d97706', '#64748b'];
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
   return (
-    <div className="bg-dark-800 border border-dark-600 rounded-lg p-3 shadow-xl">
-      <p className="text-sm font-medium text-gray-200 mb-1">{label}</p>
+    <div className="bg-[#141620] border border-stone-800 rounded-xl p-3 shadow-editorial">
+      <p className="text-xs font-bold text-stone-200 mb-1">{label}</p>
       {payload.map((item, idx) => (
-        <p key={idx} className="text-xs" style={{ color: item.color }}>
-          {item.name}: <span className="font-semibold">{item.value}</span>
+        <p key={idx} className="text-xs font-medium" style={{ color: item.color }}>
+          {item.name}: <span className="font-bold">{item.value}</span>
         </p>
       ))}
     </div>
@@ -24,16 +25,16 @@ const CustomTooltip = ({ active, payload, label }) => {
 export function EventsByTypeBarChart({ data = [] }) {
   return (
     <div className="card">
-      <h3 className="text-sm font-semibold text-white mb-4">Events by Type</h3>
+      <h3 className="text-base font-bold text-white mb-4">Events by Type</h3>
       <ResponsiveContainer width="100%" height={300}>
-        <BarChart data={data} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-          <XAxis dataKey="event_type" tick={{ fill: '#94a3b8', fontSize: 12 }} />
-          <YAxis tick={{ fill: '#94a3b8', fontSize: 12 }} />
+        <BarChart data={data} margin={{ top: 10, right: 20, left: 0, bottom: 5 }}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#262838" />
+          <XAxis dataKey="event_type" tick={{ fill: '#a1a1aa', fontSize: 11 }} />
+          <YAxis tick={{ fill: '#a1a1aa', fontSize: 11 }} />
           <Tooltip content={<CustomTooltip />} />
-          <Bar dataKey="count" name="Events" radius={[4, 4, 0, 0]}>
+          <Bar dataKey="count" name="Events" radius={[6, 6, 0, 0]}>
             {data.map((entry, idx) => (
-              <Cell key={idx} fill={COLORS[idx % COLORS.length]} />
+              <Cell key={idx} fill={WEATHER_COLORS[idx % WEATHER_COLORS.length]} />
             ))}
           </Bar>
         </BarChart>
@@ -45,24 +46,24 @@ export function EventsByTypeBarChart({ data = [] }) {
 export function EventsOverTimeChart({ data = [] }) {
   return (
     <div className="card">
-      <h3 className="text-sm font-semibold text-white mb-4">Events Over Time</h3>
+      <h3 className="text-base font-bold text-white mb-4">Events Timeline</h3>
       <ResponsiveContainer width="100%" height={300}>
-        <AreaChart data={data} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
+        <AreaChart data={data} margin={{ top: 10, right: 20, left: 0, bottom: 5 }}>
           <defs>
             <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
-              <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+              <stop offset="5%" stopColor="#38bdf8" stopOpacity={0.3} />
+              <stop offset="95%" stopColor="#38bdf8" stopOpacity={0} />
             </linearGradient>
           </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-          <XAxis dataKey="date" tick={{ fill: '#94a3b8', fontSize: 11 }} />
-          <YAxis tick={{ fill: '#94a3b8', fontSize: 12 }} />
+          <CartesianGrid strokeDasharray="3 3" stroke="#262838" />
+          <XAxis dataKey="date" tick={{ fill: '#a1a1aa', fontSize: 11 }} />
+          <YAxis tick={{ fill: '#a1a1aa', fontSize: 11 }} />
           <Tooltip content={<CustomTooltip />} />
           <Area
             type="monotone"
             dataKey="count"
-            stroke="#3b82f6"
-            strokeWidth={2}
+            stroke="#38bdf8"
+            strokeWidth={2.5}
             fillOpacity={1}
             fill="url(#colorCount)"
             name="Events"
@@ -74,10 +75,10 @@ export function EventsOverTimeChart({ data = [] }) {
 }
 
 export function EventsByStatePieChart({ data = [] }) {
-  const chartData = data.slice(0, 10);
+  const chartData = data.slice(0, 8);
   return (
     <div className="card">
-      <h3 className="text-sm font-semibold text-white mb-4">Top States</h3>
+      <h3 className="text-base font-bold text-white mb-4">Top Affected States</h3>
       <ResponsiveContainer width="100%" height={300}>
         <PieChart>
           <Pie
@@ -85,18 +86,18 @@ export function EventsByStatePieChart({ data = [] }) {
             cx="50%"
             cy="50%"
             outerRadius={100}
-            innerRadius={50}
-            paddingAngle={3}
+            innerRadius={55}
+            paddingAngle={4}
             dataKey="count"
             nameKey="state"
           >
             {chartData.map((entry, idx) => (
-              <Cell key={idx} fill={COLORS[idx % COLORS.length]} />
+              <Cell key={idx} fill={WEATHER_COLORS[idx % WEATHER_COLORS.length]} />
             ))}
           </Pie>
           <Tooltip content={<CustomTooltip />} />
           <Legend
-            formatter={(value) => <span className="text-gray-400 text-xs">{value}</span>}
+            formatter={(value) => <span className="text-stone-300 text-xs font-medium">{value}</span>}
           />
         </PieChart>
       </ResponsiveContainer>
@@ -107,21 +108,21 @@ export function EventsByStatePieChart({ data = [] }) {
 export function SeverityDistributionChart({ data = [] }) {
   return (
     <div className="card">
-      <h3 className="text-sm font-semibold text-white mb-4">Severity Distribution</h3>
+      <h3 className="text-base font-bold text-white mb-4">Severity Breakdown</h3>
       <ResponsiveContainer width="100%" height={300}>
-        <BarChart data={data} layout="vertical" margin={{ top: 5, right: 20, left: 60, bottom: 5 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-          <XAxis type="number" tick={{ fill: '#94a3b8', fontSize: 12 }} />
+        <BarChart data={data} layout="vertical" margin={{ top: 10, right: 20, left: 40, bottom: 5 }}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#262838" />
+          <XAxis type="number" tick={{ fill: '#a1a1aa', fontSize: 11 }} />
           <YAxis
             dataKey="severity"
             type="category"
-            tick={{ fill: '#94a3b8', fontSize: 12 }}
+            tick={{ fill: '#a1a1aa', fontSize: 11 }}
           />
           <Tooltip content={<CustomTooltip />} />
-          <Bar dataKey="count" name="Events" radius={[0, 4, 4, 0]}>
+          <Bar dataKey="count" name="Events" radius={[0, 6, 6, 0]}>
             {data.map((entry, idx) => {
-              const colorMap = { low: '#22c55e', moderate: '#f59e0b', high: '#f97316', critical: '#ef4444' };
-              return <Cell key={idx} fill={colorMap[entry.severity] || COLORS[idx]} />;
+              const colorMap = { low: '#10b981', moderate: '#f59e0b', high: '#f97316', critical: '#ef4444' };
+              return <Cell key={idx} fill={colorMap[entry.severity] || WEATHER_COLORS[idx]} />;
             })}
           </Bar>
         </BarChart>
@@ -133,7 +134,7 @@ export function SeverityDistributionChart({ data = [] }) {
 export function VerificationStatsChart({ data = [] }) {
   return (
     <div className="card">
-      <h3 className="text-sm font-semibold text-white mb-4">Verification Status</h3>
+      <h3 className="text-base font-bold text-white mb-4">Verification Status Distribution</h3>
       <ResponsiveContainer width="100%" height={300}>
         <PieChart>
           <Pie
@@ -142,22 +143,24 @@ export function VerificationStatsChart({ data = [] }) {
             cy="50%"
             outerRadius={100}
             innerRadius={60}
-            paddingAngle={3}
+            paddingAngle={4}
             dataKey="count"
             nameKey="verification_status"
-            label={({ verification_status, count }) => `${verification_status}: ${count}`}
           >
             {data.map((entry, idx) => {
               const colorMap = {
-                pending: '#3b82f6',
-                verified: '#22c55e',
+                pending: '#0284c7',
+                verified: '#10b981',
                 rejected: '#ef4444',
                 needs_review: '#f59e0b'
               };
-              return <Cell key={idx} fill={colorMap[entry.verification_status] || COLORS[idx]} />;
+              return <Cell key={idx} fill={colorMap[entry.verification_status] || WEATHER_COLORS[idx]} />;
             })}
           </Pie>
           <Tooltip content={<CustomTooltip />} />
+          <Legend
+            formatter={(value) => <span className="text-stone-300 text-xs font-medium capitalize">{value}</span>}
+          />
         </PieChart>
       </ResponsiveContainer>
     </div>
@@ -167,18 +170,18 @@ export function VerificationStatsChart({ data = [] }) {
 export function SourceBreakdownChart({ data = [] }) {
   return (
     <div className="card">
-      <h3 className="text-sm font-semibold text-white mb-4">Data Sources</h3>
+      <h3 className="text-base font-bold text-white mb-4">Ingestion Data Sources</h3>
       <ResponsiveContainer width="100%" height={300}>
         <RadarChart data={data}>
-          <PolarGrid stroke="#334155" />
-          <PolarAngleAxis dataKey="source" tick={{ fill: '#94a3b8', fontSize: 11 }} />
-          <PolarRadiusAxis tick={{ fill: '#64748b', fontSize: 10 }} />
+          <PolarGrid stroke="#262838" />
+          <PolarAngleAxis dataKey="source" tick={{ fill: '#a1a1aa', fontSize: 11 }} />
+          <PolarRadiusAxis tick={{ fill: '#71717a', fontSize: 10 }} />
           <Radar
             name="Events"
             dataKey="count"
-            stroke="#3b82f6"
-            fill="#3b82f6"
-            fillOpacity={0.2}
+            stroke="#38bdf8"
+            fill="#38bdf8"
+            fillOpacity={0.25}
           />
           <Tooltip content={<CustomTooltip />} />
         </RadarChart>

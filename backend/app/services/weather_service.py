@@ -56,7 +56,15 @@ class WeatherService:
         severity = self._determine_severity(title, description, event_type)
         severity_result = severity_engine.determine(title, description, event_type, city or "")
         if severity_result[1] >= 0.8:
-            severity = severity_result[0]
+            try:
+                severity = SeverityLevel(severity_result[0].lower())
+            except ValueError:
+                pass
+        if isinstance(severity, str):
+            try:
+                severity = SeverityLevel(severity.lower())
+            except ValueError:
+                pass
 
         event = WeatherEvent(
             title=title,
@@ -88,6 +96,7 @@ class WeatherService:
         db.add(event)
         await db.commit()
         await db.refresh(event)
+        event_id = event.id
 
         try:
             await intelligence_service.process_event(db, event)
@@ -98,22 +107,24 @@ class WeatherService:
                     "VERIFIED": VerificationStatus.VERIFIED,
                     "REJECTED": VerificationStatus.REJECTED,
                     "NEEDS_REVIEW": VerificationStatus.NEEDS_REVIEW,
-                    "PROBABLE": VerificationStatus.PENDING,
+                    "PROBABLE": VerificationStatus.VERIFIED if event.source == EventSource.API else VerificationStatus.PENDING,
                     "UNVERIFIED": VerificationStatus.PENDING,
                 }
                 auto = status_map.get(v.get("status"))
                 if auto:
                     event.verification_status = auto
+                elif event.source == EventSource.API:
+                    event.verification_status = VerificationStatus.VERIFIED
             await db.commit()
             await db.refresh(event)
         except Exception as exc:
-            logger.warning("Intelligence pipeline failed for event %s: %s", getattr(event, "id", "?"), exc)
+            logger.warning("Intelligence pipeline failed for event %s: %s", event_id, exc)
             await db.rollback()
 
         try:
             await notify_affected_citizens(db, event)
         except Exception as exc:
-            logger.warning("Location-based notification failed for event %s: %s", getattr(event, "id", "?"), exc)
+            logger.warning("Location-based notification failed for event %s: %s", event_id, exc)
 
         return event
 

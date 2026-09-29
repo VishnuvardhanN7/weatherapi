@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { CloudSun, Eye, EyeOff, AlertCircle, Loader2 } from 'lucide-react';
+import { CloudSun, Eye, EyeOff, AlertCircle, Loader2, Lock, UserCheck } from 'lucide-react';
 import { api } from '../services/api.js';
 import { consumeReturnTo } from '../services/api.js';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -22,9 +22,6 @@ export default function Login() {
 
   const sessionExpired = searchParams.get('auto') === 'expired';
 
-  // Resume the action the user originally attempted, otherwise land on the
-  // dashboard. This keeps the site useful while still requiring a session
-  // for actions like reporting or verifying.
   const redirectAfterLogin = () => {
     const returnTo = consumeReturnTo() || searchParams.get('return');
     navigate(returnTo && returnTo.startsWith('/') ? returnTo : '/dashboard', { replace: true });
@@ -42,7 +39,7 @@ export default function Login() {
 
     try {
       const formData = new URLSearchParams();
-      formData.append('username', form.username);
+      formData.append('username', form.username.trim());
       formData.append('password', form.password);
 
       const response = await api.post('/api/auth/login', formData, {
@@ -53,7 +50,13 @@ export default function Login() {
       login(access_token, user);
       redirectAfterLogin();
     } catch (err) {
-      setError(err.response?.data?.detail || 'Login failed. Please check your credentials.');
+      const detail = err.response?.data?.detail;
+      const message = typeof detail === 'string'
+        ? detail
+        : Array.isArray(detail)
+          ? detail.map((d) => d.msg || d.message).join(', ')
+          : 'Login failed. Please check your credentials.';
+      setError(message);
     }
     setLoading(false);
   };
@@ -65,14 +68,14 @@ export default function Login() {
 
     try {
       await api.post('/api/auth/register', {
-        username: form.username,
-        email: form.email,
+        username: form.username.trim(),
+        email: form.email.trim(),
         password: form.password,
-        full_name: form.full_name,
+        full_name: form.full_name.trim(),
       });
 
       const loginFormData = new URLSearchParams();
-      loginFormData.append('username', form.username);
+      loginFormData.append('username', form.username.trim());
       loginFormData.append('password', form.password);
 
       const loginResponse = await api.post('/api/auth/login', loginFormData, {
@@ -83,42 +86,51 @@ export default function Login() {
       login(access_token, user);
       redirectAfterLogin();
     } catch (err) {
-      setError(err.response?.data?.detail || 'Registration failed. Please try again.');
+      const detail = err.response?.data?.detail;
+      const message = typeof detail === 'string'
+        ? detail
+        : Array.isArray(detail)
+          ? detail.map((d) => d.msg || d.message).join(', ')
+          : 'Registration failed. Please try again.';
+      setError(message);
     }
     setLoading(false);
   };
 
   return (
-    <div className="min-h-screen bg-dark-950 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-[#0b0c10] text-[#e7e5df] flex items-center justify-center p-4 sm:p-6">
       <div className="w-full max-w-md">
+        
+        {/* Brand Header */}
         <div className="text-center mb-8">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-500 to-cyan-500 flex items-center justify-center mx-auto mb-4">
-            <CloudSun className="w-9 h-9 text-white" />
+          <div className="w-14 h-14 rounded-3xl bg-[#faf9f6] flex items-center justify-center text-[#0f1016] mx-auto mb-4 shadow-xl">
+            <CloudSun className="w-7 h-7 text-[#0f1016]" />
           </div>
-          <h1 className="text-2xl font-bold text-white">National Weather Platform</h1>
-          <p className="text-gray-400 mt-2 text-sm">
-            Big Data Analytics for Indian Weather Events
+          <h1 className="text-2xl font-extrabold text-[#faf9f6] tracking-tight">ATMOS Intel Portal</h1>
+          <p className="text-xs text-stone-400 mt-1.5 font-medium">
+            National Severe Weather Big Data & Analytics Platform
           </p>
         </div>
 
-        <div className="card">
-          <div className="flex mb-6 border-b border-dark-700/50">
+        <div className="card bg-[#13151f] border border-stone-800 shadow-editorial p-6 sm:p-8">
+          {/* Tab Selector */}
+          <div className="flex p-1 bg-[#0e1017] rounded-full border border-stone-800 mb-6">
             <button
               onClick={() => { setIsRegister(false); setError(''); }}
-              className={`flex-1 py-2.5 text-sm font-medium border-b-2 transition-colors ${
+              className={`flex-1 py-2 text-xs font-bold rounded-full transition-all ${
                 !isRegister
-                  ? 'border-primary-400 text-primary-400'
-                  : 'border-transparent text-gray-400 hover:text-gray-200'
+                  ? 'bg-[#faf9f6] text-[#0f1016] shadow-sm'
+                  : 'text-stone-400 hover:text-white'
               }`}
             >
               Sign In
             </button>
             <button
               onClick={() => { setIsRegister(true); setError(''); }}
-              className={`flex-1 py-2.5 text-sm font-medium border-b-2 transition-colors ${
+              className={`flex-1 py-2 text-xs font-bold rounded-full transition-all ${
                 isRegister
-                  ? 'border-primary-400 text-primary-400'
-                  : 'border-transparent text-gray-400 hover:text-gray-200'
+                  ? 'bg-[#faf9f6] text-[#0f1016] shadow-sm'
+                  : 'text-stone-400 hover:text-white'
               }`}
             >
               Register
@@ -126,78 +138,78 @@ export default function Login() {
           </div>
 
           {error && (
-            <div className="flex items-center gap-2 p-3 mb-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm">
-              <AlertCircle className="w-4 h-4 flex-shrink-0" />
+            <div className="flex items-center gap-2 p-3 mb-4 bg-red-500/10 border border-red-500/20 rounded-2xl text-red-300 text-xs font-medium">
+              <AlertCircle className="w-4 h-4 flex-shrink-0 text-red-400" />
               {error}
             </div>
           )}
 
           {sessionExpired && !error && (
-            <div className="flex items-center gap-2 p-3 mb-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg text-yellow-300 text-sm">
-              <AlertCircle className="w-4 h-4 flex-shrink-0" />
-              Your session expired. Sign in again to continue where you left off.
+            <div className="flex items-center gap-2 p-3 mb-4 bg-amber-500/10 border border-amber-500/20 rounded-2xl text-amber-300 text-xs font-medium">
+              <AlertCircle className="w-4 h-4 flex-shrink-0 text-amber-400" />
+              Your session expired. Please sign in again.
             </div>
           )}
 
           <form onSubmit={isRegister ? handleRegister : handleLogin} className="space-y-4">
             {isRegister && (
               <div>
-                <label className="text-xs text-gray-400 mb-1 block">Full Name</label>
+                <label className="text-[11px] font-bold text-stone-400 uppercase tracking-wider mb-1 block">Full Name</label>
                 <input
                   type="text"
                   name="full_name"
                   value={form.full_name}
                   onChange={handleChange}
-                  placeholder="John Doe"
-                  className="input"
+                  placeholder="e.g. Dr. Rajesh Kumar"
+                  className="input text-xs"
                 />
               </div>
             )}
 
             <div>
-              <label className="text-xs text-gray-400 mb-1 block">Username</label>
+              <label className="text-[11px] font-bold text-stone-400 uppercase tracking-wider mb-1 block">Username</label>
               <input
                 type="text"
                 name="username"
                 value={form.username}
                 onChange={handleChange}
-                placeholder="your_username"
+                placeholder="Enter username"
                 required
-                className="input"
+                className="input text-xs"
               />
             </div>
 
             {isRegister && (
               <div>
-                <label className="text-xs text-gray-400 mb-1 block">Email</label>
+                <label className="text-[11px] font-bold text-stone-400 uppercase tracking-wider mb-1 block">Email Address</label>
                 <input
                   type="email"
                   name="email"
                   value={form.email}
                   onChange={handleChange}
-                  placeholder="you@example.com"
+                  placeholder="you@domain.gov.in"
                   required
-                  className="input"
+                  className="input text-xs"
                 />
               </div>
             )}
 
             <div>
-              <label className="text-xs text-gray-400 mb-1 block">Password</label>
+              <label className="text-[11px] font-bold text-stone-400 uppercase tracking-wider mb-1 block">Password</label>
               <div className="relative">
                 <input
                   type={showPassword ? 'text' : 'password'}
                   name="password"
                   value={form.password}
                   onChange={handleChange}
-                  placeholder="Enter your password"
+                  placeholder="Enter password"
                   required
-                  className="input pr-10"
+                  className="input text-xs pr-10"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-200"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-white"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -208,11 +220,11 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="btn-primary w-full flex items-center justify-center gap-2 py-3"
+              className="btn-primary w-full flex items-center justify-center gap-2 py-3 text-xs"
             >
               {loading ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <Loader2 className="w-4 h-4 animate-spin text-[#0f1016]" />
                   {isRegister ? 'Creating Account...' : 'Signing in...'}
                 </>
               ) : (
@@ -221,9 +233,9 @@ export default function Login() {
             </button>
           </form>
 
-          <div className="mt-6 pt-4 border-t border-dark-700/30">
-            <p className="text-xs text-gray-500 text-center">
-              Browse weather data as a guest, or sign in to report and verify events.
+          <div className="mt-6 pt-4 border-t border-stone-800 text-center">
+            <p className="text-[11px] text-stone-500 font-medium">
+              Public weather observations are accessible as guest. Sign in to submit and verify incidents.
             </p>
           </div>
         </div>

@@ -50,9 +50,9 @@ class WeatherEvent(Base):
     title = Column(String(500), nullable=False, index=True)
     description = Column(Text, nullable=False)
 
-    event_type = Column(Enum(EventType), nullable=False, index=True)
-    severity = Column(Enum(SeverityLevel), nullable=False, index=True)
-    source = Column(Enum(EventSource), nullable=False, index=True)
+    event_type = Column(Enum(EventType, native_enum=False, values_callable=lambda x: [e.value for e in x]), nullable=False, index=True)
+    severity = Column(Enum(SeverityLevel, native_enum=False, values_callable=lambda x: [e.value for e in x]), nullable=False, index=True)
+    source = Column(Enum(EventSource, native_enum=False, values_callable=lambda x: [e.value for e in x]), nullable=False, index=True)
     source_url = Column(String(2000), nullable=True)
     source_id = Column(String(500), nullable=True, index=True)
 
@@ -65,7 +65,7 @@ class WeatherEvent(Base):
     videos = Column(JSON, default=list)
     metadata_ = Column("metadata", JSON, default=dict)
 
-    verification_status = Column(Enum(VerificationStatus), nullable=False, default=VerificationStatus.PENDING, index=True)
+    verification_status = Column(Enum(VerificationStatus, native_enum=False, values_callable=lambda x: [e.value for e in x]), nullable=False, default=VerificationStatus.PENDING, index=True)
     is_fake = Column(Boolean, default=False, index=True)
     fake_confidence = Column(Float, default=0.0)
     category_confidence = Column(Float, default=0.0)

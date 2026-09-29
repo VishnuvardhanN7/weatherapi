@@ -116,30 +116,64 @@ class APICollector:
         try:
             weather_main = data.get("weather", [{}])[0]
             weather_condition = weather_main.get("main", "Unknown")
+            description = weather_main.get("description", "")
             main = data.get("main", {})
             wind = data.get("wind", {})
             coord = data.get("coord", {})
             name = data.get("name", "")
+            temp = main.get("temp", 0) or 0
+            wind_speed = wind.get("speed", 0) or 0
+            visibility = data.get("visibility", 10000) or 10000
 
-            severity = WEATHER_EVENT_SEVERITY_MAP.get(weather_condition, "low")
-            temp = main.get("temp", 0)
-            if temp and temp > 40:
+            desc_lower = description.lower()
+            cond_lower = weather_condition.lower()
+
+            # Determine SIH event_type and severity strictly from actual weather data
+            event_type = "other"
+            severity = "low"
+
+            if cond_lower in ("thunderstorm", "tornado") or "thunderstorm" in desc_lower or "lightning" in desc_lower:
+                event_type = "thunderstorm"
+                severity = "critical" if (cond_lower == "tornado" or "severe" in desc_lower) else "high"
+            elif cond_lower in ("rain", "drizzle", "squall") or "rain" in desc_lower or "drizzle" in desc_lower:
+                event_type = "rainfall"
+                if "heavy" in desc_lower or "intense" in desc_lower or "extreme" in desc_lower:
+                    severity = "high"
+                elif "light" in desc_lower or "drizzle" in desc_lower or cond_lower == "drizzle":
+                    severity = "low"
+                else:
+                    severity = "moderate"
+            elif "flood" in desc_lower or "inundat" in desc_lower or "waterlog" in desc_lower:
+                event_type = "flooding"
                 severity = "high"
-            if weather_condition in ("Thunderstorm", "Tornado", "Squall"):
-                severity = "critical"
+            elif temp >= 40.0 or "heatwave" in desc_lower or "extreme heat" in desc_lower:
+                event_type = "heatwave"
+                severity = "high" if temp >= 43.0 else "moderate"
+            elif cond_lower in ("dust", "sand") or "dust" in desc_lower or "sandstorm" in desc_lower:
+                event_type = "dust_storm"
+                severity = "high" if wind_speed >= 15.0 else "moderate"
+            elif wind_speed >= 15.0 or cond_lower == "squall" or "gale" in desc_lower or "strong wind" in desc_lower:
+                event_type = "strong_winds"
+                severity = "high" if wind_speed >= 20.0 else "moderate"
+            elif cond_lower == "fog" or (cond_lower in ("mist", "haze") and visibility < 1000):
+                event_type = "fog"
+                severity = "moderate" if visibility < 500 else "low"
+            else:
+                # Normal weather observation (clear sky, clouds, mild mist/haze, normal temp/wind)
+                event_type = "other"
+                severity = "low"
 
-            description = weather_main.get("description", "")
             title = f"{weather_condition}: {description} in {name}, India"
             full_desc = (
                 f"Current weather in {name}, India: {weather_condition} ({description}). "
                 f"Temperature: {temp}°C, Humidity: {main.get('humidity', 'N/A')}%, "
-                f"Wind: {wind.get('speed', 'N/A')} m/s from {wind.get('deg', 'N/A')}°."
+                f"Wind: {wind_speed} m/s from {wind.get('deg', 'N/A')}°."
             )
 
             return {
                 "title": title,
                 "description": full_desc,
-                "event_type": weather_condition.lower(),
+                "event_type": event_type,
                 "severity": severity,
                 "city": name,
                 "state": "",
@@ -149,10 +183,10 @@ class APICollector:
                     "source_api": "openweathermap",
                     "temperature": temp,
                     "humidity": main.get("humidity"),
-                    "wind_speed": wind.get("speed"),
+                    "wind_speed": wind_speed,
                     "wind_deg": wind.get("deg"),
                     "pressure": main.get("pressure"),
-                    "visibility": data.get("visibility"),
+                    "visibility": visibility,
                     "weather_condition": weather_condition,
                     "description": description,
                     "sunrise": data.get("sys", {}).get("sunrise"),

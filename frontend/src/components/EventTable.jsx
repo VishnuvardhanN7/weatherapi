@@ -72,33 +72,33 @@ function MediaEvidence({ event }) {
 
   return (
     <div className="mt-4">
-      <h4 className="text-xs font-semibold text-gray-400 uppercase mb-2">Media evidence</h4>
+      <h4 className="text-[11px] font-bold text-stone-400 uppercase tracking-widest mb-2">Media Evidence</h4>
       {!loaded ? (
-        <div className="flex items-center gap-2 text-xs text-gray-500">
+        <div className="flex items-center gap-2 text-xs text-stone-400">
           <Loader2 className="w-3.5 h-3.5 animate-spin" />
-          Loading evidence...
+          Loading evidence media...
         </div>
       ) : items.length === 0 ? (
-        <p className="text-xs text-gray-500">No media attached.</p>
+        <p className="text-xs text-stone-500">No media attached.</p>
       ) : (
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-3">
           {items.map((m) =>
             m.failed ? (
               <div
                 key={m.id}
-                className="h-28 w-40 rounded-lg border border-dark-600 bg-dark-900/60 flex flex-col items-center justify-center text-center p-2"
+                className="h-24 w-36 rounded-2xl border border-stone-800 bg-[#0e1017] flex flex-col items-center justify-center text-center p-2"
               >
-                <Image className="h-6 w-6 text-gray-600 mb-1" />
-                <span className="text-[10px] text-gray-500 leading-tight">Evidence unavailable</span>
+                <Image className="h-5 w-5 text-stone-500 mb-1" />
+                <span className="text-[10px] text-stone-500">Evidence unavailable</span>
               </div>
             ) : m.kind === 'video' ? (
-              <video key={m.id} src={m.objectUrl} controls className="h-28 w-40 object-cover rounded-lg" />
+              <video key={m.id} src={m.objectUrl} controls className="h-24 w-36 object-cover rounded-2xl border border-stone-800" />
             ) : (
               <img
                 key={m.id}
                 src={m.objectUrl}
                 alt="Weather evidence"
-                className="h-28 w-40 object-cover rounded-lg border border-dark-700"
+                className="h-24 w-36 object-cover rounded-2xl border border-stone-800"
               />
             )
           )}
@@ -114,47 +114,41 @@ function SourceBlock({ event }) {
   const handle = details.handle;
   return (
     <div>
-      <h4 className="text-xs font-semibold text-gray-400 uppercase mb-1">Source</h4>
-      <dl className="text-sm space-y-1">
+      <h4 className="text-[11px] font-bold text-stone-400 uppercase tracking-widest mb-2">Source</h4>
+      <dl className="text-xs space-y-1.5 text-stone-300">
         <div className="flex gap-2">
-          <dt className="text-gray-500 flex-shrink-0">Platform:</dt>
-          <dd className="text-gray-300">{details.platform || details.display || event.source}</dd>
+          <dt className="text-stone-500 font-medium">Platform:</dt>
+          <dd className="font-semibold text-white">{details.platform || details.display || event.source}</dd>
         </div>
         {name && (
           <div className="flex gap-2 items-center">
-            <AtSign className="w-3.5 h-3.5 text-gray-500 flex-shrink-0" />
-            <dd className="text-gray-300 capitalize">{name}</dd>
+            <AtSign className="w-3.5 h-3.5 text-stone-500 flex-shrink-0" />
+            <dd className="capitalize font-semibold">{name}</dd>
           </div>
         )}
         {handle && (
           <div className="flex gap-2 items-center">
-            <User className="w-3.5 h-3.5 text-gray-500 flex-shrink-0" />
-            <dd className="text-gray-300">@{handle}</dd>
+            <User className="w-3.5 h-3.5 text-stone-500 flex-shrink-0" />
+            <dd>@{handle}</dd>
           </div>
         )}
         {details.followers != null && (
           <div className="flex gap-2">
-            <dt className="text-gray-500 flex-shrink-0">Followers:</dt>
-            <dd className="text-gray-300">{details.followers.toLocaleString()}</dd>
+            <dt className="text-stone-500">Followers:</dt>
+            <dd>{details.followers.toLocaleString()}</dd>
           </div>
         )}
         {event.reported_by_id && (
           <div className="flex gap-2">
-            <dt className="text-gray-500 flex-shrink-0">Reporter:</dt>
-            <dd className="text-gray-300">{event.reported_by_name || `user #${event.reported_by_id}`}</dd>
+            <dt className="text-stone-500">Reporter:</dt>
+            <dd>{event.reported_by_name || `user #${event.reported_by_id}`}</dd>
           </div>
         )}
         {event.verified_by_name && (
           <div className="flex gap-2 items-center">
-            <Shield className="w-3.5 h-3.5 text-gray-500 flex-shrink-0" />
-            <dt className="text-gray-500 flex-shrink-0">Verified by:</dt>
-            <dd className="text-gray-300">{event.verified_by_name}</dd>
-          </div>
-        )}
-        {event.duplicate_of_id && (
-          <div className="flex gap-2">
-            <dt className="text-gray-500 flex-shrink-0">Duplicate of:</dt>
-            <dd className="text-gray-300">event #{event.duplicate_of_id}</dd>
+            <Shield className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
+            <dt className="text-stone-500">Verified by:</dt>
+            <dd className="text-emerald-400 font-semibold">{event.verified_by_name}</dd>
           </div>
         )}
       </dl>
@@ -191,8 +185,8 @@ export default function EventTable({ events = [], onVerify, onDelete, onViewInte
   const renderSortIcon = (key) => {
     if (sortKey !== key) return null;
     return sortDir === 'asc'
-      ? <ChevronUp className="w-3.5 h-3.5 inline ml-1" />
-      : <ChevronDown className="w-3.5 h-3.5 inline ml-1" />;
+      ? <ChevronUp className="w-3.5 h-3.5 inline ml-1 text-sky-400" />
+      : <ChevronDown className="w-3.5 h-3.5 inline ml-1 text-sky-400" />;
   };
 
   if (loading) {
@@ -200,7 +194,7 @@ export default function EventTable({ events = [], onVerify, onDelete, onViewInte
       <div className="card">
         <div className="animate-pulse space-y-4">
           {[...Array(5)].map((_, i) => (
-            <div key={i} className="h-12 bg-dark-700/50 rounded-lg" />
+            <div key={i} className="h-12 bg-stone-800/50 rounded-2xl" />
           ))}
         </div>
       </div>
@@ -208,20 +202,20 @@ export default function EventTable({ events = [], onVerify, onDelete, onViewInte
   }
 
   return (
-    <div className="card overflow-hidden p-0">
+    <div className="card overflow-hidden p-0 border border-stone-800/90 shadow-editorial">
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-dark-700/50">
+            <tr className="border-b border-stone-800 bg-[#0e1017]">
               {selectable && (
-                <th className="px-4 py-3 w-10">
+                <th className="px-4 py-3.5 w-10">
                   <button
                     onClick={onSelectAll}
                     className={clsx(
-                      'w-5 h-5 rounded border flex items-center justify-center transition-colors',
+                      'w-5 h-5 rounded-md border flex items-center justify-center transition-colors',
                       selectedIds?.size === events.length && events.length > 0
-                        ? 'bg-primary-500 border-primary-500'
-                        : 'border-dark-600 hover:border-gray-400'
+                        ? 'bg-sky-500 border-sky-500'
+                        : 'border-stone-700 hover:border-stone-500'
                     )}
                     aria-label="Select all events"
                   >
@@ -236,8 +230,8 @@ export default function EventTable({ events = [], onVerify, onDelete, onViewInte
                   key={col.key}
                   onClick={() => col.sortable && handleSort(col.key)}
                   className={clsx(
-                    'px-4 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider',
-                    col.sortable && 'cursor-pointer hover:text-gray-200 select-none',
+                    'px-4 py-3.5 text-left text-[11px] font-bold text-stone-400 uppercase tracking-widest',
+                    col.sortable && 'cursor-pointer hover:text-white select-none',
                     col.width
                   )}
                 >
@@ -247,7 +241,7 @@ export default function EventTable({ events = [], onVerify, onDelete, onViewInte
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-dark-700/30">
+          <tbody className="divide-y divide-stone-800/60 bg-[#13151f]/60">
             {sorted.map((event) => {
               const StatusIcon = STATUS_ICONS[event.verification_status] || Clock;
               return (
@@ -255,18 +249,18 @@ export default function EventTable({ events = [], onVerify, onDelete, onViewInte
                   <tr
                     className={clsx(
                       'transition-colors',
-                      selectedIds?.has(event.id) ? 'bg-primary-500/10' : 'hover:bg-dark-700/20',
+                      selectedIds?.has(event.id) ? 'bg-sky-500/10' : 'hover:bg-stone-800/40',
                       'cursor-pointer'
                     )}
                   >
                     {selectable && (
-                      <td className="px-4 py-3 w-10" onClick={(e) => { e.stopPropagation(); onToggleSelect?.(event.id); }}>
+                      <td className="px-4 py-3.5 w-10" onClick={(e) => { e.stopPropagation(); onToggleSelect?.(event.id); }}>
                         <button
                           className={clsx(
-                            'w-5 h-5 rounded border flex items-center justify-center transition-colors',
+                            'w-5 h-5 rounded-md border flex items-center justify-center transition-colors',
                             selectedIds?.has(event.id)
-                              ? 'bg-primary-500 border-primary-500'
-                              : 'border-dark-600 hover:border-gray-400'
+                              ? 'bg-sky-500 border-sky-500'
+                              : 'border-stone-700 hover:border-stone-500'
                           )}
                           aria-label={`Select event: ${event.title}`}
                         >
@@ -276,63 +270,60 @@ export default function EventTable({ events = [], onVerify, onDelete, onViewInte
                         </button>
                       </td>
                     )}
-                    <td className="px-4 py-3 max-w-xs" onClick={() => setExpandedRow(expandedRow === event.id ? null : event.id)}>
-                      <p className="font-medium text-white truncate">{event.title}</p>
-                      <p className="text-xs text-gray-500 truncate mt-0.5">{event.description?.slice(0, 80)}...</p>
+                    <td className="px-4 py-3.5 max-w-xs" onClick={() => setExpandedRow(expandedRow === event.id ? null : event.id)}>
+                      <p className="font-bold text-white truncate group-hover:text-sky-300">{event.title}</p>
+                      <p className="text-xs text-stone-400 truncate mt-0.5">{event.description?.slice(0, 80)}...</p>
                     </td>
-                    <td className="px-4 py-3" onClick={() => setExpandedRow(expandedRow === event.id ? null : event.id)}>
-                      <span className="capitalize text-gray-300">{event.event_type?.replace('_', ' ')}</span>
+                    <td className="px-4 py-3.5" onClick={() => setExpandedRow(expandedRow === event.id ? null : event.id)}>
+                      <span className="capitalize text-stone-300 font-medium">{event.event_type?.replace('_', ' ')}</span>
                     </td>
-                    <td className="px-4 py-3" onClick={() => setExpandedRow(expandedRow === event.id ? null : event.id)}>
+                    <td className="px-4 py-3.5" onClick={() => setExpandedRow(expandedRow === event.id ? null : event.id)}>
                       <span className={clsx('badge', SEVERITY_STYLES[event.severity])}>
                         {event.severity}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-gray-300" onClick={() => setExpandedRow(expandedRow === event.id ? null : event.id)}>{event.city || '-'}</td>
-                    <td className="px-4 py-3 text-gray-300" onClick={() => setExpandedRow(expandedRow === event.id ? null : event.id)}>{event.state || '-'}</td>
-                    <td className="px-4 py-3" onClick={() => setExpandedRow(expandedRow === event.id ? null : event.id)}>
-                      <span className="capitalize text-gray-400">{event.source?.replace('_', ' ')}</span>
+                    <td className="px-4 py-3.5 text-stone-300" onClick={() => setExpandedRow(expandedRow === event.id ? null : event.id)}>{event.city || '-'}</td>
+                    <td className="px-4 py-3.5 text-stone-300" onClick={() => setExpandedRow(expandedRow === event.id ? null : event.id)}>{event.state || '-'}</td>
+                    <td className="px-4 py-3.5" onClick={() => setExpandedRow(expandedRow === event.id ? null : event.id)}>
+                      <span className="capitalize text-stone-400 font-medium">{event.source?.replace('_', ' ')}</span>
                     </td>
-                    <td className="px-4 py-3" onClick={() => setExpandedRow(expandedRow === event.id ? null : event.id)}>
-                      <span className={clsx('badge inline-flex items-center gap-1', STATUS_STYLES[event.verification_status])}>
+                    <td className="px-4 py-3.5" onClick={() => setExpandedRow(expandedRow === event.id ? null : event.id)}>
+                      <span className={clsx('badge inline-flex items-center gap-1.5', STATUS_STYLES[event.verification_status])}>
                         <StatusIcon className="w-3 h-3" />
                         {event.verification_status?.replace('_', ' ')}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-gray-400 text-xs whitespace-nowrap" onClick={() => setExpandedRow(expandedRow === event.id ? null : event.id)}>
+                    <td className="px-4 py-3.5 text-stone-400 text-xs whitespace-nowrap font-medium" onClick={() => setExpandedRow(expandedRow === event.id ? null : event.id)}>
                       {dayjs(event.reported_at).format('DD MMM, HH:mm')}
                     </td>
                   </tr>
+
                   {expandedRow === event.id && (
-                    <tr className="bg-dark-800/40">
-                      <td colSpan={selectable ? 9 : 8} className="px-6 py-4">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <tr className="bg-[#0e1017]/90 border-l-2 border-sky-400">
+                      <td colSpan={selectable ? 9 : 8} className="px-6 py-5">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                           <div>
-                            <h4 className="text-xs font-semibold text-gray-400 uppercase mb-1">Description</h4>
-                            <p className="text-sm text-gray-300">{event.description}</p>
+                            <h4 className="text-[11px] font-bold text-stone-400 uppercase tracking-widest mb-2">Description</h4>
+                            <p className="text-xs text-stone-200 leading-relaxed">{event.description}</p>
                           </div>
                           <div>
-                            <h4 className="text-xs font-semibold text-gray-400 uppercase mb-1">Details</h4>
-                            <dl className="text-sm space-y-1">
+                            <h4 className="text-[11px] font-bold text-stone-400 uppercase tracking-widest mb-2">Geospatial Details</h4>
+                            <dl className="text-xs space-y-1.5 text-stone-300">
                               <div className="flex gap-2">
-                                <dt className="text-gray-500">Coordinates:</dt>
-                                <dd className="text-gray-300">
+                                <dt className="text-stone-500 font-medium">Coordinates:</dt>
+                                <dd className="font-semibold">
                                   {event.latitude != null && event.longitude != null
                                     ? `${event.latitude.toFixed(4)}, ${event.longitude.toFixed(4)}`
                                     : 'Not available'}
                                 </dd>
                               </div>
                               <div className="flex gap-2">
-                                <dt className="text-gray-500">Fake Score:</dt>
-                                <dd className="text-gray-300">{(event.fake_confidence * 100).toFixed(1)}%</dd>
+                                <dt className="text-stone-500 font-medium">Misinfo Score:</dt>
+                                <dd className="font-semibold text-rose-400">{(event.fake_confidence * 100).toFixed(1)}%</dd>
                               </div>
                               <div className="flex gap-2">
-                                <dt className="text-gray-500">Category Conf:</dt>
-                                <dd className="text-gray-300">{(event.category_confidence * 100).toFixed(1)}%</dd>
-                              </div>
-                              <div className="flex gap-2">
-                                <dt className="text-gray-500">Reported:</dt>
-                                <dd className="text-gray-300">{dayjs(event.reported_at).format('DD MMM YYYY, HH:mm')}</dd>
+                                <dt className="text-stone-500 font-medium">Classification Conf:</dt>
+                                <dd className="font-semibold text-sky-400">{(event.category_confidence * 100).toFixed(1)}%</dd>
                               </div>
                             </dl>
                           </div>
@@ -341,59 +332,50 @@ export default function EventTable({ events = [], onVerify, onDelete, onViewInte
 
                         <MediaEvidence event={event} />
 
-                        <div className="flex gap-2 flex-wrap mt-4">
+                        <div className="flex gap-3 flex-wrap mt-5 pt-4 border-t border-stone-800">
                           {event.source_url && (
                             <a
                               href={event.source_url}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="btn-secondary text-xs inline-flex items-center gap-1"
+                              className="btn-secondary text-xs inline-flex items-center gap-1.5"
                               onClick={(e) => e.stopPropagation()}
                             >
-                              <ExternalLink className="w-3 h-3" /> Source post
+                              <ExternalLink className="w-3.5 h-3.5" /> Source Post
                             </a>
                           )}
                           {onVerify && event.verification_status === 'pending' && (
                             <>
                               <button
                                 onClick={(e) => { e.stopPropagation(); onVerify(event.id, 'verified'); }}
-                                className="btn-primary text-xs inline-flex items-center gap-1"
+                                className="btn-primary text-xs inline-flex items-center gap-1.5"
                               >
-                                <CheckCircle className="w-3 h-3" /> Verify
+                                <CheckCircle className="w-3.5 h-3.5 text-emerald-600" /> Verify
                               </button>
                               <button
                                 onClick={(e) => { e.stopPropagation(); onVerify(event.id, 'rejected'); }}
-                                className="btn-danger text-xs inline-flex items-center gap-1"
+                                className="btn-danger text-xs inline-flex items-center gap-1.5"
                               >
-                                <XCircle className="w-3 h-3" /> Reject
+                                <XCircle className="w-3.5 h-3.5" /> Reject
                               </button>
                             </>
                           )}
                           {onViewIntelligence && (
                             <button
                               onClick={(e) => { e.stopPropagation(); onViewIntelligence(event.id); }}
-                              className="btn-secondary text-xs inline-flex items-center gap-1"
+                              className="btn-secondary text-xs inline-flex items-center gap-1.5"
                               aria-label={`View AI intelligence for: ${event.title}`}
                             >
-                              <Shield className="w-3 h-3" /> AI Intelligence
-                            </button>
-                          )}
-                          {onClassify && (
-                            <button
-                              onClick={(e) => { e.stopPropagation(); onClassify(event); }}
-                              className="btn-secondary text-xs inline-flex items-center gap-1"
-                              aria-label={`Override AI classification for: ${event.title}`}
-                            >
-                              <Shield className="w-3 h-3" /> AI Classify
+                              <Shield className="w-3.5 h-3.5 text-sky-400" /> AI Intelligence Dossier
                             </button>
                           )}
                           {onDelete && (
                             <button
                               onClick={(e) => { e.stopPropagation(); onDelete(event.id); }}
-                              className="btn-danger text-xs inline-flex items-center gap-1"
+                              className="btn-danger text-xs inline-flex items-center gap-1.5"
                               aria-label={`Delete weather event: ${event.title}`}
                             >
-                              <XCircle className="w-3 h-3" /> Delete
+                              <XCircle className="w-3.5 h-3.5" /> Delete
                             </button>
                           )}
                         </div>
@@ -407,7 +389,7 @@ export default function EventTable({ events = [], onVerify, onDelete, onViewInte
         </table>
       </div>
       {sorted.length === 0 && (
-        <div className="text-center py-12 text-gray-500">No events found</div>
+        <div className="text-center py-12 text-stone-500 font-medium">No weather events matched current filters</div>
       )}
     </div>
   );

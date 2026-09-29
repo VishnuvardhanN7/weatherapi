@@ -9,9 +9,9 @@ const TYPE_ICONS = {
 };
 
 const TYPE_COLORS = {
-  alert: 'text-red-400',
-  verification: 'text-yellow-400',
-  system: 'text-blue-400',
+  alert: 'text-rose-400',
+  verification: 'text-amber-400',
+  system: 'text-sky-400',
 };
 
 export default function NotificationDrawer({ open, onClose }) {
@@ -87,18 +87,20 @@ export default function NotificationDrawer({ open, onClose }) {
 
   return (
     <div className="fixed inset-0 z-50" role="dialog" aria-modal="true" aria-label="Notifications">
-      <div className="absolute inset-0 bg-black/60" onClick={onClose} />
+      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
       <aside
         ref={drawerRef}
         tabIndex={-1}
-        className="absolute right-0 top-0 h-full w-full max-w-md bg-dark-900 border-l border-dark-700/50 flex flex-col outline-none"
+        className="absolute right-0 top-0 h-full w-full max-w-md bg-[#0e1017] border-l border-stone-800 flex flex-col outline-none shadow-2xl"
       >
-        <div className="flex items-center justify-between p-4 border-b border-dark-700/50">
-          <div className="flex items-center gap-2">
-            <Bell className="w-5 h-5 text-primary-400" />
-            <h2 className="text-sm font-semibold text-white">Notifications</h2>
+        <div className="flex items-center justify-between p-5 border-b border-stone-800">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-full bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400">
+              <Bell className="w-4 h-4" />
+            </div>
+            <h2 className="text-sm font-bold text-white tracking-tight">System Alerts & Notifications</h2>
             {unread > 0 && (
-              <span className="text-xs px-2 py-0.5 rounded-full bg-primary-500/20 text-primary-300" aria-label={`${unread} unread`}>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-500/15 text-red-400 border border-red-500/20">
                 {unread} new
               </span>
             )}
@@ -107,19 +109,18 @@ export default function NotificationDrawer({ open, onClose }) {
             {unread > 0 && (
               <button
                 onClick={markAllRead}
-                className="text-xs text-primary-300 hover:text-primary-200 inline-flex items-center gap-1 transition-colors"
-                aria-label="Mark all notifications as read"
+                className="text-xs font-semibold text-sky-400 hover:text-sky-300 inline-flex items-center gap-1 transition-colors"
               >
                 <CheckCheck className="w-3.5 h-3.5" /> Mark all read
               </button>
             )}
-            <button onClick={onClose} className="p-2 rounded-lg hover:bg-dark-700 text-gray-400" aria-label="Close notifications">
+            <button onClick={onClose} className="p-2 rounded-full hover:bg-stone-800 text-stone-400 hover:text-white transition-colors">
               <X className="w-5 h-5" />
             </button>
           </div>
         </div>
 
-        <div className="flex gap-1 px-4 py-2 border-b border-dark-700/30" role="tablist" aria-label="Notification filters">
+        <div className="flex gap-2 px-5 py-3 border-b border-stone-800" role="tablist">
           {[
             { id: 'all', label: 'All' },
             { id: 'unread', label: 'Unread' },
@@ -130,65 +131,65 @@ export default function NotificationDrawer({ open, onClose }) {
               role="tab"
               aria-selected={filter === tab.id}
               onClick={() => setFilter(tab.id)}
-              className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors ${
+              className={`px-3 py-1.5 text-xs font-bold rounded-full transition-all ${
                 filter === tab.id
-                  ? 'bg-primary-500/20 text-primary-300'
-                  : 'text-gray-400 hover:text-gray-200 hover:bg-dark-700/50'
+                  ? 'bg-[#faf9f6] text-[#0f1016] shadow-sm'
+                  : 'text-stone-400 hover:text-white hover:bg-stone-800'
               }`}
             >
               {tab.label}
             </button>
           ))}
           {loading && (
-            <Loader2 className="w-3.5 h-3.5 text-gray-500 animate-spin ml-auto self-center" />
+            <Loader2 className="w-3.5 h-3.5 text-stone-500 animate-spin ml-auto self-center" />
           )}
         </div>
 
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto p-2">
           {filtered.length === 0 && (
-            <div className="flex flex-col items-center justify-center h-full text-gray-500">
-              <Bell className="w-10 h-10 mb-3 opacity-40" />
-              <p className="text-sm">
-                {filter === 'unread' ? 'No unread notifications' : 'No notifications yet'}
+            <div className="flex flex-col items-center justify-center h-full text-stone-500 p-8 text-center">
+              <Bell className="w-10 h-10 mb-3 opacity-30 text-stone-400" />
+              <p className="text-xs font-semibold">
+                {filter === 'unread' ? 'No unread notifications' : 'No notification history'}
               </p>
             </div>
           )}
 
-          <ul className="divide-y divide-dark-700/30">
+          <div className="space-y-1.5">
             {filtered.map((n) => {
               const Icon = TYPE_ICONS[n.type] || Info;
-              const iconColor = TYPE_COLORS[n.type] || 'text-gray-400';
+              const iconColor = TYPE_COLORS[n.type] || 'text-stone-400';
               return (
-                <li
+                <div
                   key={n.id}
                   onClick={() => !n.is_read && markRead(n.id)}
-                  onKeyDown={(e) => { if (e.key === 'Enter' && !n.is_read) markRead(n.id); }}
                   role="button"
                   tabIndex={0}
-                  className={`p-4 cursor-pointer transition-colors ${
-                    n.is_read ? '' : 'bg-primary-500/5 hover:bg-primary-500/10'
+                  className={`p-4 rounded-2xl transition-all cursor-pointer border ${
+                    n.is_read
+                      ? 'bg-[#13151f]/40 border-stone-800/40 opacity-70'
+                      : 'bg-[#13151f] border-stone-800 hover:border-stone-700 shadow-sm'
                   }`}
-                  aria-label={`${n.is_read ? '' : 'Unread: '}${n.title}`}
                 >
                   <div className="flex gap-3">
-                    <div className="mt-0.5">
+                    <div className="mt-0.5 shrink-0">
                       <Icon className={`w-4 h-4 ${iconColor}`} />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-white">{n.title}</p>
-                      <p className="text-xs text-gray-400 mt-0.5">{n.message}</p>
-                      <p className="text-[11px] text-gray-500 mt-1">
+                      <p className="text-xs font-bold text-white">{n.title}</p>
+                      <p className="text-xs text-stone-400 mt-1 leading-relaxed">{n.message}</p>
+                      <p className="text-[10px] font-medium text-stone-500 mt-2">
                         {new Date(n.created_at).toLocaleString()}
                       </p>
                     </div>
                     {!n.is_read && (
-                      <span className="w-2 h-2 mt-1.5 rounded-full bg-red-500 flex-shrink-0" aria-hidden="true" />
+                      <span className="w-2 h-2 mt-1 rounded-full bg-red-500 flex-shrink-0" />
                     )}
                   </div>
-                </li>
+                </div>
               );
             })}
-          </ul>
+          </div>
         </div>
       </aside>
     </div>

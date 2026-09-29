@@ -54,6 +54,7 @@ class ClassifierEngine:
     def __init__(self):
         from app.ml.categorizer import categorizer
         self._categorizer = categorizer
+        self.version = CLASSIFIER_VERSION
 
     def classify(self, title: str, description: str) -> ClassificationResult:
         text = f"{title} {description}".strip()
@@ -69,9 +70,22 @@ class ClassifierEngine:
         candidates = self._score_categories(text)
 
         if not candidates:
+            if self._is_normal_weather_text(text):
+                return ClassificationResult(
+                    category="other",
+                    confidence=0.85,
+                    candidates=[ClassificationCandidate(
+                        category="other",
+                        score=5.0,
+                        confidence=0.85,
+                        matched_patterns=["normal_weather_observation"]
+                    )],
+                    state="AUTO_CLASSIFIED",
+                    reason="Normal weather observation",
+                )
             return ClassificationResult(
                 category="other",
-                confidence=0.0,
+                confidence=0.4,
                 candidates=[],
                 state="REVIEW_REQUIRED",
                 reason="No category patterns matched",
@@ -213,6 +227,24 @@ class ClassifierEngine:
             return "LOW"
         else:
             return "UNCERTAIN"
+
+    def _is_normal_weather_text(self, text: str) -> bool:
+        norm = text.lower()
+        normal_phrases = [
+            "clear sky", "clear skies", "few clouds", "scattered clouds",
+            "broken clouds", "overcast", "cloudy", "partly cloudy",
+            "mostly cloudy", "fair weather", "normal weather",
+            "current weather", "temperature", "humidity", "visibility",
+            "feels like", "mist", "haze"
+        ]
+        severe_keywords = [
+            "thunderstorm", "flood", "flooding", "heavy rain", "cloudburst",
+            "heatwave", "dust storm", "cyclone", "hurricane", "tornado",
+            "squall", "strong wind", "gale", "high wind"
+        ]
+        has_normal = any(p in norm for p in normal_phrases)
+        has_severe = any(k in norm for k in severe_keywords)
+        return has_normal and not has_severe
 
 
 classifier_engine = ClassifierEngine()

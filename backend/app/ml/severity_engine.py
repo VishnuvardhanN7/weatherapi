@@ -119,7 +119,10 @@ class SeverityEngine:
             reason_parts.append("moderate-to-high indicators")
 
         # 2b. Low-intensity language dampens severity claims
-        if low_hits >= 2:
+        if low_hits >= 1 and (critical_hits + high_hits + moderate_hits) == 0:
+            severity_score = 1
+            reason_parts.append("normal/low-intensity weather observation")
+        elif low_hits >= 2:
             severity_score = max(1, severity_score - 1)
             reason_parts.append("low-intensity language")
 
@@ -138,8 +141,8 @@ class SeverityEngine:
             severity_score = max(severity_score, 3)
             reason_parts.append("multi-city impact")
 
-        # 5. Major city context
-        if city and city.lower() in MAJOR_CITIES:
+        # 5. Major city context (only bumps severity if actual elevated hazard exists)
+        if city and city.lower() in MAJOR_CITIES and severity_score > 1 and event_type not in ("other", None, ""):
             severity_score = min(severity_score + 1, 4)
             reason_parts.append("major city population context")
 

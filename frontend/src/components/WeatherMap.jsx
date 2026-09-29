@@ -1,25 +1,34 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, CircleMarker, useMap } from 'react-leaflet';
+import React, { useEffect, useState } from 'react';
+import { MapContainer, TileLayer, CircleMarker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import dayjs from 'dayjs';
+import { MapPin, Navigation, ExternalLink, ShieldCheck, AlertTriangle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const EVENT_COLORS = {
-  rainfall: '#3b82f6',
-  thunderstorm: '#8b5cf6',
-  flooding: '#06b6d4',
-  heatwave: '#ef4444',
-  fog: '#6b7280',
-  dust_storm: '#d97706',
-  strong_winds: '#10b981',
-  cyclone: '#dc2626',
-  other: '#64748b',
+  rainfall: '#38bdf8',       // cyan/blue
+  thunderstorm: '#0284c7',   // dark blue
+  flooding: '#06b6d4',       // teal
+  heatwave: '#f97316',       // orange
+  fog: '#94a3b8',            // slate
+  dust_storm: '#d97706',     // amber
+  strong_winds: '#38bdf8',   // sky blue
+  cyclone: '#ef4444',        // red
+  other: '#a1a1aa',          // neutral
+};
+
+const SEVERITY_STROKE_COLORS = {
+  critical: '#ef4444',
+  high: '#f97316',
+  moderate: '#38bdf8',
+  low: '#10b981',
 };
 
 const SEVERITY_SIZES = {
-  low: 6,
-  moderate: 8,
-  high: 10,
-  critical: 14,
+  low: 8,
+  moderate: 11,
+  high: 14,
+  critical: 18,
 };
 
 const INDIA_CENTER = [20.5937, 78.9629];
@@ -27,126 +36,135 @@ const INDIA_CENTER = [20.5937, 78.9629];
 function FitBounds({ events }) {
   const map = useMap();
   useEffect(() => {
-    if (events.length > 0) {
+    if (events && events.length > 0) {
       const validEvents = events.filter(e => e.latitude && e.longitude);
       if (validEvents.length > 0) {
         const bounds = L.latLngBounds(
           validEvents.map(e => [e.latitude, e.longitude])
         );
-        map.fitBounds(bounds, { padding: [50, 50] });
+        map.fitBounds(bounds, { padding: [50, 50], maxZoom: 8 });
       }
     }
   }, [events, map]);
   return null;
 }
 
-function scoreColor(score) {
-  if (score == null) return '#9ca3af';
-  if (score >= 75) return '#34d399';
+function getScoreColor(score) {
+  if (score == null) return '#a1a1aa';
+  if (score >= 75) return '#10b981';
   if (score >= 50) return '#38bdf8';
-  if (score >= 25) return '#fbbf24';
-  return '#f87171';
+  if (score >= 25) return '#f59e0b';
+  return '#ef4444';
 }
 
-export default function WeatherMap({ events = [], height = '500px', showLegend = true, onSelectEvent }) {
-  const [selectedEvent, setSelectedEvent] = useState(null);
-
-  const handleSelect = (event) => {
-    setSelectedEvent(event);
-    onSelectEvent?.(event);
-  };
+export default function WeatherMap({ events = [], height = '560px', showLegend = true, onSelectEvent }) {
+  const navigate = useNavigate();
 
   return (
-    <div className="relative">
+    <div className="relative w-full overflow-hidden rounded-3xl border border-stone-800/90 shadow-editorial bg-[#0e1017]">
       <MapContainer
         center={INDIA_CENTER}
         zoom={5}
-        style={{ height, width: '100%', borderRadius: '12px' }}
+        style={{ height, width: '100%', borderRadius: '1.5rem' }}
         zoomControl={true}
         scrollWheelZoom={true}
       >
-      
-
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
         <FitBounds events={events} />
+
         {events.map((event) => {
           if (!event.latitude || !event.longitude) return null;
-          const color = EVENT_COLORS[event.event_type] || '#64748b';
-          const radius = SEVERITY_SIZES[event.severity] || 6;
-          const intel = event.intelligence || {};
+
+          const severityKey = (event.severity || 'low').toLowerCase();
+          const typeKey = (event.event_type || 'other').toLowerCase();
+
+          const strokeColor = SEVERITY_STROKE_COLORS[severityKey] || '#38bdf8';
+          const fillColor = EVENT_COLORS[typeKey] || '#38bdf8';
+          const radius = SEVERITY_SIZES[severityKey] || 10;
+          const isCritical = severityKey === 'critical';
+
+          const intel = event.metadata_?.intelligence || event.intelligence || {};
           const verificationScore = event.verification_score ?? intel.verification?.score;
-          const classificationConfidence = event.category_confidence
-            ?? intel.classification?.confidence;
-          const lifecycle = event.lifecycle ?? intel.lifecycle?.lifecycle;
-          const verified = event.verification_status === 'verified';
+
           return (
             <CircleMarker
               key={event.id}
               center={[event.latitude, event.longitude]}
               radius={radius}
               pathOptions={{
-                color: verified ? scoreColor(verificationScore) : color,
-                fillColor: color,
-                fillOpacity: verified ? 0.9 : 0.6,
-                weight: verified ? 3 : 1,
-                opacity: 0.9,
+                color: strokeColor,
+                fillColor: fillColor,
+                fillOpacity: isCritical ? 0.95 : 0.8,
+                weight: isCritical ? 4 : 2.5,
+                opacity: 1,
               }}
               eventHandlers={{
-                click: () => handleSelect(event),
+                click: () => onSelectEvent?.(event),
               }}
             >
-              <Popup className="custom-popup">
-                <div className="min-w-[250px] p-2">
-                  <div className="flex items-center gap-2 mb-2">
+              <Popup className="editorial-popup">
+                <div className="min-w-[270px] p-3 font-sans text-stone-900">
+                  <div className="flex items-center gap-2 mb-2 pb-2 border-b border-stone-200">
                     <span
-                      className="w-3 h-3 rounded-full flex-shrink-0"
-                      style={{ backgroundColor: color }}
+                      className="w-3 h-3 rounded-full flex-shrink-0 shadow-sm"
+                      style={{ backgroundColor: fillColor }}
                     />
-                    <h3 className="font-bold text-sm text-gray-900">{event.title}</h3>
+                    <h3 className="font-extrabold text-sm text-stone-900 truncate leading-snug">
+                      {event.title}
+                    </h3>
                   </div>
-                  <p className="text-xs text-gray-600 mb-2 line-clamp-3">{event.description}</p>
-                  <div className="grid grid-cols-2 gap-1 text-xs">
-                    <div><span className="font-medium">Type:</span> {event.event_type}</div>
-                    <div><span className="font-medium">Severity:</span> {event.severity}</div>
-                    <div><span className="font-medium">City:</span> {event.city || 'N/A'}</div>
-                    <div><span className="font-medium">State:</span> {event.state || 'N/A'}</div>
-                    <div className="col-span-2">
-                      <span className="font-medium">Status:</span> {event.verification_status}
+
+                  <p className="text-xs text-stone-600 mb-3 leading-relaxed line-clamp-3">
+                    {event.description}
+                  </p>
+
+                  <div className="grid grid-cols-2 gap-1.5 text-xs text-stone-700 bg-stone-100 p-2.5 rounded-xl border border-stone-200/60 mb-3">
+                    <div>
+                      <span className="font-bold text-stone-900">Type:</span>{' '}
+                      <span className="capitalize">{event.event_type}</span>
+                    </div>
+                    <div>
+                      <span className="font-bold text-stone-900">Severity:</span>{' '}
+                      <span className="capitalize font-semibold">{event.severity}</span>
+                    </div>
+                    <div>
+                      <span className="font-bold text-stone-900">City:</span>{' '}
+                      {event.city || 'N/A'}
+                    </div>
+                    <div>
+                      <span className="font-bold text-stone-900">Source:</span>{' '}
+                      <span className="capitalize">{event.source || 'API'}</span>
+                    </div>
+                    <div className="col-span-2 capitalize">
+                      <span className="font-bold text-stone-900">Status:</span>{' '}
+                      {(event.verification_status || 'pending').replace('_', ' ')}
                     </div>
                     {verificationScore != null && (
-                      <div className="col-span-2">
-                        <span className="font-medium">AI Verification:</span>{' '}
-                        <span style={{ color: scoreColor(verificationScore) }}>
+                      <div className="col-span-2 font-semibold">
+                        <span className="text-stone-900 font-bold">AI Trust Score:</span>{' '}
+                        <span style={{ color: getScoreColor(verificationScore) }}>
                           {Math.round(verificationScore)}/100
                         </span>
                       </div>
                     )}
-                    {classificationConfidence != null && (
-                      <div className="col-span-2">
-                        <span className="font-medium">AI Classification:</span>{' '}
-                        {event.event_type} ({(classificationConfidence * 100).toFixed(0)}%)
-                      </div>
-                    )}
-                    {lifecycle && (
-                      <div className="col-span-2">
-                        <span className="font-medium">Lifecycle:</span> {lifecycle}
-                      </div>
-                    )}
-                    <div className="col-span-2 text-gray-400">
-                      {dayjs(event.reported_at).format('DD MMM YYYY, hh:mm A')}
-                    </div>
                   </div>
-                  <a
-                    href={`/events/${event.id}/intelligence`}
-                    onClick={(e) => { e.stopPropagation(); handleSelect(event); }}
-                    className="mt-2 inline-block text-xs font-semibold text-primary-600 hover:text-primary-700"
-                  >
-                    View AI intelligence →
-                  </a>
+
+                  <div className="flex items-center justify-between pt-1 border-t border-stone-200">
+                    <span className="text-[10px] text-stone-500 font-medium">
+                      {dayjs(event.reported_at).format('DD MMM YYYY, HH:mm')}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => navigate(`/events/${event.id}/intelligence`)}
+                      className="inline-flex items-center gap-1 text-xs font-extrabold text-sky-700 hover:text-sky-900 underline"
+                    >
+                      AI Dossier <ExternalLink className="w-3 h-3" />
+                    </button>
+                  </div>
                 </div>
               </Popup>
             </CircleMarker>
@@ -154,20 +172,46 @@ export default function WeatherMap({ events = [], height = '500px', showLegend =
         })}
       </MapContainer>
 
+      {/* Top Floating Badge */}
+      <div className="absolute top-4 left-4 z-[1000] bg-[#0e1017]/90 backdrop-blur-xl border border-stone-800 rounded-full px-4 py-2 flex items-center gap-2.5 shadow-lg">
+        <Navigation className="w-4 h-4 text-sky-400" />
+        <span className="text-xs font-bold tracking-wide text-white uppercase">India Weather Radar</span>
+        <span className="text-[11px] text-stone-300 font-semibold border-l border-stone-800 pl-2.5 flex items-center gap-1.5">
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          {events.length} Weather Observations
+        </span>
+        {events.length > 0 && (
+          <span className="text-[11px] text-stone-400 border-l border-stone-800 pl-2.5 hidden sm:inline font-medium">
+            Last Ingestion: {dayjs(Math.max(...events.map(e => new Date(e.reported_at || e.created_at || Date.now())))).format('HH:mm:ss')}
+          </span>
+        )}
+      </div>
+
+      {/* Bottom Floating Legend */}
       {showLegend && (
-        <div className="absolute bottom-4 left-4 z-[1000] bg-dark-900/95 backdrop-blur-sm border border-dark-700/50 rounded-lg p-3">
-          <h4 className="text-xs font-bold text-gray-300 mb-2">Event Types</h4>
-          <div className="grid grid-cols-2 gap-x-4 gap-y-1">
-            {Object.entries(EVENT_COLORS).map(([type, color]) => (
-              <div key={type} className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: color }} />
-                <span className="text-xs text-gray-400 capitalize">{type.replace('_', ' ')}</span>
+        <div className="absolute bottom-4 right-4 z-[1000] bg-[#0e1017]/95 backdrop-blur-xl border border-stone-800 rounded-2xl p-3 shadow-2xl max-w-xs">
+          <div className="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-2 flex items-center justify-between gap-2">
+            <span>Severity & Event Key</span>
+            <span className="text-emerald-400 font-semibold">Live API Grid</span>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-x-3 gap-y-1.5 mb-2 pb-2 border-b border-stone-800">
+            {Object.entries(SEVERITY_STROKE_COLORS).map(([sev, color]) => (
+              <div key={sev} className="flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: color }} />
+                <span className="text-[11px] text-stone-300 capitalize font-medium">{sev}</span>
               </div>
             ))}
           </div>
-          <p className="mt-2 border-t border-dark-700/50 pt-2 text-[10px] text-gray-500">
-            Ring color = AI verification score on verified events
-          </p>
+
+          <div className="grid grid-cols-2 gap-x-3 gap-y-1">
+            {Object.entries(EVENT_COLORS).slice(0, 6).map(([type, color]) => (
+              <div key={type} className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full" style={{ backgroundColor: color }} />
+                <span className="text-[10px] text-stone-400 capitalize font-medium">{type.replace('_', ' ')}</span>
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>
