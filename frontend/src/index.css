@@ -3,15 +3,16 @@
 @tailwind utilities;
 
 :root {
-  /* Default Light Theme Variables */
-  --bg-primary: #F7F7F5;
-  --bg-secondary: #EFEFEA;
+  /* ATMOS Light Theme Variables - Warm Cream & Scientific Editorial */
+  --bg-primary: #F6F5F1;
+  --bg-secondary: #EFECE6;
   --surface: #FFFFFF;
-  --surface-elevated: #F4F3EF;
-  --text-primary: #14161F;
-  --text-secondary: #64748B;
-  --border: #E2E8F0;
-  --border-subtle: #F1F5F9;
+  --surface-elevated: #F9F8F5;
+  --text-primary: #121316;
+  --text-secondary: #6B7280;
+  --border: #E5E3DC;
+  --border-subtle: #EEECE6;
+  --accent-yellow: #EAE300;
   --accent-weather: #0284C7;
   --accent-warning: #F59E0B;
   --accent-success: #10B981;

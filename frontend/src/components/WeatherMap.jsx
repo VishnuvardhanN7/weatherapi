@@ -61,7 +61,7 @@ export default function WeatherMap({ events = [], height = '560px', showLegend =
   const navigate = useNavigate();
 
   return (
-    <div className="relative z-0 isolate w-full overflow-hidden rounded-3xl border border-stone-200 dark:border-stone-800/90 shadow-sm dark:shadow-editorial bg-white dark:bg-[#0e1017]">
+    <div className="relative z-0 isolate w-full overflow-hidden rounded-3xl border border-[#E5E3DC] dark:border-stone-800/90 shadow-sm dark:shadow-editorial bg-white dark:bg-[#0e1017]">
       <MapContainer
         center={INDIA_CENTER}
         zoom={5}
