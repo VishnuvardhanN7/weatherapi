@@ -6,6 +6,7 @@ import Events from './pages/Events.jsx';
 import Analytics from './pages/Analytics.jsx';
 import AdminPanel from './pages/AdminPanel.jsx';
 import IncidentIntelligence from './pages/IncidentIntelligence.jsx';
+import AskAtmos from './pages/AskAtmos.jsx';
 import Login from './pages/Login.jsx';
 import { AuthProvider, useAuth } from './context/AuthContext.jsx';
 import { ThemeProvider } from './context/ThemeContext.jsx';
@@ -57,6 +58,14 @@ function AppRoutes() {
         element={
           <Layout>
             <Dashboard />
+          </Layout>
+        }
+      />
+      <Route
+        path="/ask-atmos"
+        element={
+          <Layout>
+            <AskAtmos />
           </Layout>
         }
       />

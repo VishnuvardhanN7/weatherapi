@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, CloudSun, BarChart3, Settings, LogOut,
-  Menu, X, Bell, LogIn, SlidersHorizontal, Sun, Moon
+  Menu, X, Bell, LogIn, SlidersHorizontal, Sun, Moon, Sparkles
 } from 'lucide-react';
 import clsx from 'clsx';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -111,6 +111,22 @@ export default function Layout({ children }) {
 
           {/* RIGHT: Minimal Control Icons & Avatar */}
           <div className="flex items-center gap-2 shrink-0">
+            {/* Ask ATMOS Button (immediately beside Theme Toggle) */}
+            <button
+              onClick={() => navigate('/ask-atmos')}
+              className={clsx(
+                'flex items-center gap-1.5 px-3.5 py-2 rounded-full text-[13px] font-bold transition-all duration-200 shadow-sm cursor-pointer',
+                location.pathname === '/ask-atmos'
+                  ? 'bg-black text-white dark:bg-white dark:text-[#0f1016] ring-2 ring-stone-400/50'
+                  : 'bg-[#14161f] dark:bg-stone-800 hover:bg-black dark:hover:bg-stone-700 text-white'
+              )}
+              title="Ask ATMOS AI Assistant"
+              aria-label="Ask ATMOS AI Assistant"
+            >
+              <Sparkles className="w-4 h-4 text-amber-300 dark:text-amber-400 shrink-0" />
+              <span>Ask ATMOS</span>
+            </button>
+
             {/* Theme Toggle Button */}
             <button
               onClick={toggleTheme}
