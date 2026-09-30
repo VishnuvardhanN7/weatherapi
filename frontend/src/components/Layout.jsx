@@ -214,7 +214,7 @@ export default function Layout({ children }) {
 
       {/* Mobile Navigation Drawer */}
       {mobileOpen && (
-        <div className="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true">
+        <div className="fixed inset-0 z-[9999] lg:hidden" role="dialog" aria-modal="true">
           <div className="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
           <aside className="fixed right-0 top-0 h-full w-64 bg-white dark:bg-[#0e1017] border-l border-stone-200 dark:border-stone-800 p-5 flex flex-col justify-between z-50">
             <div>

@@ -130,6 +130,8 @@ html.dark {
 .leaflet-container {
   background: var(--bg-secondary) !important;
   font-family: 'Plus Jakarta Sans', sans-serif !important;
+  z-index: 1 !important;
+  isolation: isolate;
 }
 
 /* Custom leaflet map tile dark filter in dark mode, crisp clean tiles in light mode */

@@ -83,7 +83,7 @@ export default function AlertPreferences({ open, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50">
+    <div className="fixed inset-0 z-[9999]">
       <div className="absolute inset-0 bg-black/60 dark:bg-black/70 backdrop-blur-sm" onClick={onClose} />
       <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white dark:bg-[#0e1017] border border-stone-200 dark:border-stone-800 rounded-3xl p-6 sm:p-8 shadow-xl dark:shadow-editorial">
         <div className="flex items-center justify-between mb-6 pb-4 border-b border-stone-200 dark:border-stone-800">

@@ -86,7 +86,7 @@ export default function NotificationDrawer({ open, onClose }) {
     : items;
 
   return (
-    <div className="fixed inset-0 z-50" role="dialog" aria-modal="true" aria-label="Notifications">
+    <div className="fixed inset-0 z-[9999]" role="dialog" aria-modal="true" aria-label="Notifications">
       <div className="absolute inset-0 bg-black/60 dark:bg-black/70 backdrop-blur-sm" onClick={onClose} />
       <aside
         ref={drawerRef}
