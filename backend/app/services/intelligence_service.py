@@ -34,6 +34,7 @@ from app.ml.stale_detection import determine_lifecycle
 from app.ml.explainability import explainability_service
 from app.ml.timeline import build_timeline
 from app.ml.verification_engine import verification_engine
+from app.services.rag_service import evaluate_jev, purify_weather_data, index_approved_event_embedding
 
 
 class IntelligenceService:
@@ -136,6 +137,14 @@ class IntelligenceService:
             has_official_weather_data=has_official,
             db=db,
         )
+
+        # JEV Verification Gate & LLM Purification
+        jev_decision = await evaluate_jev(event, db=db)
+        if jev_decision.get("probability", 0.0) >= 0.6:
+            await purify_weather_data(event)
+            v_stat = str(getattr(event, 'verification_status', '')).lower()
+            if 'verified' in v_stat:
+                await index_approved_event_embedding(db, event)
 
         # 7. Data quality
         dq = compute_data_quality(

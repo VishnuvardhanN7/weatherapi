@@ -358,12 +358,19 @@ async def verify_event(
     event.verification_status = verify_req.verification_status
     event.verified_by_id = current_user.id
 
+    from app.services.rag_service import evaluate_jev, purify_weather_data, index_approved_event_embedding
     if verify_req.verification_status == VerificationStatus.REJECTED:
         event.is_fake = True
         event.fake_confidence = 1.0
+    elif verify_req.verification_status == VerificationStatus.VERIFIED:
+        jev_info = await evaluate_jev(event, db=db)
+        if jev_info.get("probability", 0.0) >= 0.6:
+            await purify_weather_data(event)
+            await index_approved_event_embedding(db, event)
 
     await db.commit()
     await db.refresh(event)
+
 
     from app.services.notification_service import notify_user
     if event.reported_by_id and event.reported_by_id != current_user.id:

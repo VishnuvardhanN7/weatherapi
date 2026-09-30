@@ -10,6 +10,46 @@ const SAMPLE_QUESTIONS = [
   "Are there any severe weather risks?",
 ];
 
+function FormattedMessage({ text }) {
+  if (!text) return null;
+  const lines = text.split('\n');
+
+  return (
+    <div className="space-y-1.5 leading-relaxed text-xs sm:text-sm">
+      {lines.map((line, lineIdx) => {
+        if (!line.trim()) return <div key={lineIdx} className="h-1" />;
+
+        const trimmed = line.trim();
+        const isBullet = trimmed.startsWith('•') || trimmed.startsWith('-');
+        const lineContent = isBullet ? trimmed.replace(/^[•-]\s*/, '') : line;
+
+        const parts = lineContent.split(/(\*\*.*?\*\*)/g);
+        const renderedParts = parts.map((part, partIdx) => {
+          if (part.startsWith('**') && part.endsWith('**') && part.length > 4) {
+            return (
+              <strong key={partIdx} className="font-extrabold text-stone-900 dark:text-white">
+                {part.slice(2, -2)}
+              </strong>
+            );
+          }
+          return part;
+        });
+
+        if (isBullet) {
+          return (
+            <div key={lineIdx} className="flex items-start gap-2 pl-1 my-0.5">
+              <span className="text-amber-500 font-bold shrink-0 font-mono">•</span>
+              <span className="flex-1">{renderedParts}</span>
+            </div>
+          );
+        }
+
+        return <p key={lineIdx}>{renderedParts}</p>;
+      })}
+    </div>
+  );
+}
+
 export default function AskAtmos() {
   const navigate = useNavigate();
   const [messages, setMessages] = useState([]);
@@ -50,6 +90,7 @@ export default function AskAtmos() {
         highPriorityCount: data.high_priority_count,
         avgVerScore: data.avg_verification_score,
         relatedEvents: data.related_events || [],
+        verifiedSources: data.verified_sources || [],
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       };
       setMessages((prev) => [...prev, assistantMessage]);
@@ -184,30 +225,43 @@ export default function AskAtmos() {
               </div>
 
               {/* Message Body */}
-              <div className="text-xs sm:text-sm leading-relaxed whitespace-pre-line">
-                {msg.text}
-              </div>
+              <FormattedMessage text={msg.text} />
 
-              {/* Related Events Context Pills (if assistant message) */}
-              {msg.relatedEvents && msg.relatedEvents.length > 0 && (
-                <div className="pt-3 border-t border-stone-100 dark:border-stone-800/80 space-y-2">
-                  <p className="text-[11px] font-bold text-stone-500 uppercase tracking-wider">
-                    Grounded Observations ({msg.relatedEvents.length})
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {msg.relatedEvents.map((e) => (
-                      <button
-                        key={e.id}
-                        onClick={() => navigate(`/events/${e.id}/intelligence`)}
-                        className="text-[11px] font-medium px-3 py-1 rounded-full bg-stone-100 dark:bg-stone-800/80 text-sky-600 dark:text-sky-400 hover:underline flex items-center gap-1 border border-stone-200 dark:border-stone-700"
-                      >
-                        <span>{e.title}</span>
-                        <span className="text-stone-400">({e.city || 'India'})</span>
-                      </button>
-                    ))}
+              {/* Grounded RAG Verified Sources display (Deduplicated) */}
+              {msg.verifiedSources && msg.verifiedSources.length > 0 && (() => {
+                const uniqueSources = [];
+                const seenKeys = new Set();
+                for (const s of msg.verifiedSources) {
+                  const key = `${(s.city || 'india').toLowerCase()}_${(s.event_type || 'obs').toLowerCase()}_${(s.source || 'verified').toLowerCase()}`;
+                  if (!seenKeys.has(key)) {
+                    seenKeys.add(key);
+                    uniqueSources.push(s);
+                  }
+                }
+
+                return (
+                  <div className="pt-3 border-t border-stone-200/60 dark:border-stone-800/80 space-y-1.5 text-left">
+                    <p className="text-[10px] font-bold text-stone-500 uppercase tracking-widest">
+                      Verified Sources ({uniqueSources.length})
+                    </p>
+                    <div className="flex flex-wrap gap-2 pt-0.5">
+                      {uniqueSources.map((s, sIdx) => (
+                        <div
+                          key={sIdx}
+                          onClick={() => s.id && navigate(`/events/${s.id}/intelligence`)}
+                          className="text-[11px] px-3 py-1.5 rounded-xl bg-stone-50 dark:bg-stone-800/60 border border-stone-200/80 dark:border-stone-700/60 text-stone-700 dark:text-stone-300 flex items-center gap-2 cursor-pointer hover:border-stone-400 transition-colors"
+                        >
+                          <span className="font-bold text-stone-900 dark:text-stone-100">{s.city || 'India'}{s.state ? `, ${s.state}` : ''}</span>
+                          <span className="text-stone-400">•</span>
+                          <span className="text-[10px] text-stone-500 capitalize">{s.event_type || 'observation'} ({s.source || 'verified'})</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
+                );
+              })()}
+
+
             </div>
           </div>
         ))}
