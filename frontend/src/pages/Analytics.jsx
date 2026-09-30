@@ -74,12 +74,12 @@ export default function Analytics() {
     <div className="space-y-8" role="main" aria-label="Analytics">
       
       {/* Editorial Header Section */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-4 border-b border-stone-800/80">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-4 border-b border-stone-200 dark:border-stone-800/80">
         <div>
-          <h1 className="text-2xl sm:text-3xl lg:text-[34px] font-extrabold text-[#faf9f6] tracking-tight">
+          <h1 className="text-2xl sm:text-3xl lg:text-[34px] font-extrabold text-stone-900 dark:text-[#faf9f6] tracking-tight">
             Analytics
           </h1>
-          <p className="text-[13px] text-stone-400 mt-1.5 font-normal max-w-2xl leading-relaxed">
+          <p className="text-[13px] text-stone-600 dark:text-stone-400 mt-1.5 font-normal max-w-2xl leading-relaxed">
             Weather patterns across India
           </p>
         </div>
@@ -88,7 +88,7 @@ export default function Analytics() {
           <select
             value={timeRange}
             onChange={(e) => setTimeRange(e.target.value)}
-            className="bg-[#141620] border border-stone-800 text-stone-200 text-xs font-semibold rounded-full px-3.5 py-2 focus:outline-none"
+            className="bg-white dark:bg-[#141620] border border-stone-200 dark:border-stone-800 text-stone-800 dark:text-stone-200 text-xs font-semibold rounded-full px-3.5 py-2 focus:outline-none shadow-sm dark:shadow-none"
           >
             <option value="7">Last 7 Days</option>
             <option value="30">Last 30 Days</option>
@@ -98,7 +98,7 @@ export default function Analytics() {
           <select
             value={granularity}
             onChange={(e) => setGranularity(e.target.value)}
-            className="bg-[#141620] border border-stone-800 text-stone-200 text-xs font-semibold rounded-full px-3.5 py-2 focus:outline-none"
+            className="bg-white dark:bg-[#141620] border border-stone-200 dark:border-stone-800 text-stone-800 dark:text-stone-200 text-xs font-semibold rounded-full px-3.5 py-2 focus:outline-none shadow-sm dark:shadow-none"
           >
             <option value="day">Daily</option>
             <option value="week">Weekly</option>
@@ -147,10 +147,10 @@ export default function Analytics() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
-          <div className="card overflow-hidden p-0 border border-stone-800">
-            <div className="p-4 border-b border-stone-800 bg-[#0e1017]">
-              <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-sky-400" /> Geographic Incident Concentration
+          <div className="card overflow-hidden p-0 border border-stone-200 dark:border-stone-800">
+            <div className="p-4 border-b border-stone-200 dark:border-stone-800 bg-stone-100 dark:bg-[#0e1017]">
+              <h3 className="text-sm font-bold text-stone-900 dark:text-white flex items-center gap-2">
+                <MapPin className="w-4 h-4 text-sky-600 dark:text-sky-400" /> Geographic Incident Concentration
               </h3>
             </div>
             <WeatherMap events={recentEvents} height="360px" />
@@ -168,26 +168,26 @@ export default function Analytics() {
       {/* Top Cities */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="card">
-          <h3 className="text-base font-bold text-white mb-4 flex items-center gap-2">
-            <TrendingUp className="w-4 h-4 text-sky-400" /> Top Cities by Weather Event Volume
+          <h3 className="text-base font-bold text-stone-900 dark:text-white mb-4 flex items-center gap-2">
+            <TrendingUp className="w-4 h-4 text-sky-600 dark:text-sky-400" /> Top Cities by Weather Event Volume
           </h3>
           <div className="space-y-3">
             {topCities.map((city, idx) => (
-              <div key={idx} className="flex items-center gap-3 p-3 rounded-2xl bg-[#0e1017] border border-stone-800">
-                <span className="text-xs font-bold text-stone-500 w-5 text-right">{idx + 1}</span>
+              <div key={idx} className="flex items-center gap-3 p-3 rounded-2xl bg-stone-50 dark:bg-[#0e1017] border border-stone-200 dark:border-stone-800">
+                <span className="text-xs font-bold text-stone-400 dark:text-stone-500 w-5 text-right">{idx + 1}</span>
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-bold text-white truncate">{city.city}</p>
-                  <p className="text-[11px] text-stone-400">{city.state}</p>
+                  <p className="text-xs font-bold text-stone-900 dark:text-white truncate">{city.city}</p>
+                  <p className="text-[11px] text-stone-500 dark:text-stone-400">{city.state}</p>
                 </div>
-                <div className="w-24 bg-stone-800 rounded-full h-2">
+                <div className="w-24 bg-stone-200 dark:bg-stone-800 rounded-full h-2">
                   <div
-                    className="bg-sky-400 h-2 rounded-full"
+                    className="bg-sky-500 dark:bg-sky-400 h-2 rounded-full"
                     style={{
                       width: `${topCities.length > 0 ? (city.count / topCities[0].count) * 100 : 0}%`,
                     }}
                   />
                 </div>
-                <span className="text-xs font-bold text-white w-8 text-right">{city.count}</span>
+                <span className="text-xs font-bold text-stone-900 dark:text-white w-8 text-right">{city.count}</span>
               </div>
             ))}
             {topCities.length === 0 && (
@@ -197,22 +197,22 @@ export default function Analytics() {
         </div>
 
         <div className="card">
-          <h3 className="text-base font-bold text-white mb-4 flex items-center gap-2">
-            <BarChart3 className="w-4 h-4 text-sky-400" /> Event Category Distribution
+          <h3 className="text-base font-bold text-stone-900 dark:text-white mb-4 flex items-center gap-2">
+            <BarChart3 className="w-4 h-4 text-sky-600 dark:text-sky-400" /> Event Category Distribution
           </h3>
           <div className="space-y-3">
             {byType.map((item, idx) => {
               const maxCount = byType.length > 0 ? Math.max(...byType.map(b => b.count)) : 1;
               const pct = (item.count / maxCount) * 100;
               return (
-                <div key={idx} className="p-3 bg-[#0e1017] border border-stone-800 rounded-2xl">
+                <div key={idx} className="p-3 bg-stone-50 dark:bg-[#0e1017] border border-stone-200 dark:border-stone-800 rounded-2xl">
                   <div className="flex items-center justify-between mb-1.5">
-                    <span className="text-xs font-bold text-stone-200 capitalize">{item.event_type?.replace('_', ' ')}</span>
-                    <span className="text-xs font-bold text-white">{item.count}</span>
+                    <span className="text-xs font-bold text-stone-800 dark:text-stone-200 capitalize">{item.event_type?.replace('_', ' ')}</span>
+                    <span className="text-xs font-bold text-stone-900 dark:text-white">{item.count}</span>
                   </div>
-                  <div className="w-full bg-stone-800 rounded-full h-2">
+                  <div className="w-full bg-stone-200 dark:bg-stone-800 rounded-full h-2">
                     <div
-                      className="h-2 rounded-full bg-sky-400 transition-all duration-500"
+                      className="h-2 rounded-full bg-sky-500 dark:bg-sky-400 transition-all duration-500"
                       style={{ width: `${pct}%` }}
                     />
                   </div>

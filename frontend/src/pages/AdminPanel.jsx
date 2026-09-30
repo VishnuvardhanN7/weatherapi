@@ -235,33 +235,33 @@ export default function AdminPanel() {
       
       {/* Keyboard shortcuts modal */}
       {showShortcuts && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm" onClick={() => setShowShortcuts(false)}>
-          <div className="card max-w-md w-full mx-4 bg-[#0e1017] border border-stone-800 p-6 shadow-2xl" onClick={e => e.stopPropagation()}>
-            <div className="flex items-center justify-between mb-4 pb-3 border-b border-stone-800">
-              <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                <Keyboard className="w-4 h-4 text-sky-400" /> Keyboard Shortcuts
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 dark:bg-black/70 backdrop-blur-sm" onClick={() => setShowShortcuts(false)}>
+          <div className="card max-w-md w-full mx-4 bg-white dark:bg-[#0e1017] border border-stone-200 dark:border-stone-800 p-6 shadow-xl dark:shadow-2xl" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-4 pb-3 border-b border-stone-200 dark:border-stone-800">
+              <h3 className="text-sm font-bold text-stone-900 dark:text-white flex items-center gap-2">
+                <Keyboard className="w-4 h-4 text-sky-600 dark:text-sky-400" /> Keyboard Shortcuts
               </h3>
-              <button onClick={() => setShowShortcuts(false)} className="text-stone-400 hover:text-white">
+              <button onClick={() => setShowShortcuts(false)} className="text-stone-400 hover:text-stone-700 dark:hover:text-white">
                 <XCircle className="w-4 h-4" />
               </button>
             </div>
             <div className="space-y-2 text-xs">
-              <div className="flex justify-between py-1.5"><span className="text-stone-400">Verify selected</span><kbd className="px-2.5 py-1 bg-stone-800 rounded-md text-stone-200 font-mono">V</kbd></div>
-              <div className="flex justify-between py-1.5"><span className="text-stone-400">Reject selected</span><kbd className="px-2.5 py-1 bg-stone-800 rounded-md text-stone-200 font-mono">R</kbd></div>
-              <div className="flex justify-between py-1.5"><span className="text-stone-400">Deselect all / Close</span><kbd className="px-2.5 py-1 bg-stone-800 rounded-md text-stone-200 font-mono">Esc</kbd></div>
-              <div className="flex justify-between py-1.5"><span className="text-stone-400">Toggle shortcuts</span><kbd className="px-2.5 py-1 bg-stone-800 rounded-md text-stone-200 font-mono">?</kbd></div>
+              <div className="flex justify-between py-1.5"><span className="text-stone-600 dark:text-stone-400">Verify selected</span><kbd className="px-2.5 py-1 bg-stone-100 dark:bg-stone-800 rounded-md text-stone-800 dark:text-stone-200 font-mono">V</kbd></div>
+              <div className="flex justify-between py-1.5"><span className="text-stone-600 dark:text-stone-400">Reject selected</span><kbd className="px-2.5 py-1 bg-stone-100 dark:bg-stone-800 rounded-md text-stone-800 dark:text-stone-200 font-mono">R</kbd></div>
+              <div className="flex justify-between py-1.5"><span className="text-stone-600 dark:text-stone-400">Deselect all / Close</span><kbd className="px-2.5 py-1 bg-stone-100 dark:bg-stone-800 rounded-md text-stone-800 dark:text-stone-200 font-mono">Esc</kbd></div>
+              <div className="flex justify-between py-1.5"><span className="text-stone-600 dark:text-stone-400">Toggle shortcuts</span><kbd className="px-2.5 py-1 bg-stone-100 dark:bg-stone-800 rounded-md text-stone-800 dark:text-stone-200 font-mono">?</kbd></div>
             </div>
           </div>
         </div>
       )}
 
       {/* Editorial Header Section */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-4 border-b border-stone-800/80">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-4 border-b border-stone-200 dark:border-stone-800/80">
         <div>
-          <h1 className="text-2xl sm:text-3xl lg:text-[34px] font-extrabold text-[#faf9f6] tracking-tight">
+          <h1 className="text-2xl sm:text-3xl lg:text-[34px] font-extrabold text-stone-900 dark:text-[#faf9f6] tracking-tight">
             Admin Panel
           </h1>
-          <p className="text-[13px] text-stone-400 mt-1.5 font-normal max-w-2xl leading-relaxed">
+          <p className="text-[13px] text-stone-600 dark:text-stone-400 mt-1.5 font-normal max-w-2xl leading-relaxed">
             System administration and verification
           </p>
         </div>
@@ -271,7 +271,7 @@ export default function AdminPanel() {
             onClick={() => setShowShortcuts(true)}
             className="btn-secondary inline-flex items-center gap-2 text-xs py-2 px-4"
           >
-            <Keyboard className="w-3.5 h-3.5 text-stone-400" />
+            <Keyboard className="w-3.5 h-3.5 text-stone-500 dark:text-stone-400" />
             <span>Shortcuts</span>
           </button>
           <button onClick={fetchData} className="btn-secondary inline-flex items-center gap-2 text-xs py-2 px-4" disabled={loading}>
@@ -310,13 +310,13 @@ export default function AdminPanel() {
       </div>
 
       {/* Data Ingestion Control Card */}
-      <div className="bg-[#13151f]/90 border border-stone-800/90 rounded-3xl p-6 sm:p-7 shadow-editorial">
+      <div className="bg-white dark:bg-[#13151f]/90 border border-stone-200 dark:border-stone-800/90 rounded-3xl p-6 sm:p-7 shadow-sm dark:shadow-editorial">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h2 className="text-base font-bold text-white tracking-tight flex items-center gap-2">
-              <Database className="w-4 h-4 text-sky-400" /> Multi-Source Ingestion Engine
+            <h2 className="text-base font-bold text-stone-900 dark:text-white tracking-tight flex items-center gap-2">
+              <Database className="w-4 h-4 text-sky-600 dark:text-sky-400" /> Multi-Source Ingestion Engine
             </h2>
-            <p className="mt-1 text-xs text-stone-400 leading-relaxed">
+            <p className="mt-1 text-xs text-stone-600 dark:text-stone-400 leading-relaxed">
               Trigger live collection from Twitter/X feeds, weather web scraping, and public APIs.
             </p>
           </div>
@@ -330,12 +330,12 @@ export default function AdminPanel() {
           </div>
         </div>
         {ingestionMessage && (
-          <p className="mt-3 text-xs font-semibold text-sky-400">{ingestionMessage}</p>
+          <p className="mt-3 text-xs font-semibold text-sky-600 dark:text-sky-400">{ingestionMessage}</p>
         )}
       </div>
 
       {/* Tabs */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-stone-800 pb-0">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-stone-200 dark:border-stone-800 pb-0">
         <div className="flex gap-2 overflow-x-auto" role="tablist">
           {tabs.map((tab) => {
             const Icon = tab.icon;
@@ -348,14 +348,14 @@ export default function AdminPanel() {
                 onClick={() => { setActiveTab(tab.id); setSelectedIds(new Set()); }}
                 className={`flex items-center gap-2 px-4 py-3 text-xs font-bold border-b-2 transition-all whitespace-nowrap ${
                   isActive
-                    ? 'border-[#faf9f6] text-[#faf9f6]'
-                    : 'border-transparent text-stone-400 hover:text-white'
+                    ? 'border-[#14161f] text-[#14161f] dark:border-[#faf9f6] dark:text-[#faf9f6]'
+                    : 'border-transparent text-stone-500 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white'
                 }`}
               >
                 <Icon className="w-3.5 h-3.5" />
                 {tab.label}
                 {tab.count > 0 && (
-                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-stone-800 text-stone-300 font-bold">{tab.count}</span>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-stone-200 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-bold">{tab.count}</span>
                 )}
               </button>
             );
@@ -363,14 +363,14 @@ export default function AdminPanel() {
         </div>
 
         <div className="flex items-center gap-2 pb-2 sm:pb-0">
-          <label htmlFor="admin-status-filter" className="text-xs font-bold text-stone-400 uppercase tracking-wider flex items-center gap-1">
+          <label htmlFor="admin-status-filter" className="text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider flex items-center gap-1">
             <Filter className="w-3 h-3" /> Status:
           </label>
           <select
             id="admin-status-filter"
             value={statusFilter}
             onChange={(e) => { setStatusFilter(e.target.value); setSelectedIds(new Set()); }}
-            className="bg-[#141620] border border-stone-800 text-stone-200 text-xs py-1.5 px-3 rounded-full font-semibold focus:outline-none"
+            className="bg-white dark:bg-[#141620] border border-stone-200 dark:border-stone-800 text-stone-800 dark:text-stone-200 text-xs py-1.5 px-3 rounded-full font-semibold focus:outline-none shadow-sm dark:shadow-none"
           >
             <option value="all">All Statuses</option>
             <option value="pending">Pending</option>
@@ -383,13 +383,13 @@ export default function AdminPanel() {
 
       {/* Bulk action toolbar */}
       {selectedIds.size > 0 && (
-        <div className="card bg-sky-500/10 border border-sky-500/20 p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          <span className="text-xs font-bold text-sky-300">
+        <div className="card bg-sky-50 dark:bg-sky-500/10 border border-sky-200 dark:border-sky-500/20 p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <span className="text-xs font-bold text-sky-900 dark:text-sky-300">
             {selectedIds.size} incident(s) selected
           </span>
           <div className="flex gap-2">
             <button onClick={() => bulkVerify('verified')} className="btn-primary text-xs py-2 inline-flex items-center gap-1">
-              <CheckCircle className="w-3.5 h-3.5 text-emerald-600" /> Verify Selected
+              <CheckCircle className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-600" /> Verify Selected
             </button>
             <button onClick={() => bulkVerify('rejected')} className="btn-danger text-xs py-2 inline-flex items-center gap-1">
               <XCircle className="w-3.5 h-3.5" /> Reject Selected
@@ -419,25 +419,25 @@ export default function AdminPanel() {
 
       {/* AI Classification Override Modal */}
       {overrideEvent && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4" onClick={closeOverride}>
-          <div className="card max-w-lg w-full max-h-[85vh] overflow-y-auto bg-[#0e1017] border border-stone-800 p-6 shadow-editorial" onClick={e => e.stopPropagation()}>
-            <div className="flex items-center justify-between mb-4 pb-3 border-b border-stone-800">
-              <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                <Brain className="w-4 h-4 text-sky-400" /> Human Override for AI Classifier
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 dark:bg-black/70 backdrop-blur-sm p-4" onClick={closeOverride}>
+          <div className="card max-w-lg w-full max-h-[85vh] overflow-y-auto bg-white dark:bg-[#0e1017] border border-stone-200 dark:border-stone-800 p-6 shadow-xl dark:shadow-editorial" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-4 pb-3 border-b border-stone-200 dark:border-stone-800">
+              <h3 className="text-sm font-bold text-stone-900 dark:text-white flex items-center gap-2">
+                <Brain className="w-4 h-4 text-sky-600 dark:text-sky-400" /> Human Override for AI Classifier
               </h3>
-              <button onClick={closeOverride} className="text-stone-400 hover:text-white">
+              <button onClick={closeOverride} className="text-stone-400 hover:text-stone-700 dark:hover:text-white">
                 <XCircle className="w-4 h-4" />
               </button>
             </div>
 
-            <p className="text-xs text-stone-400 mb-4 leading-relaxed">
-              Manually reclassify <span className="text-white font-semibold">“{overrideEvent.title}”</span>. The original AI prediction will remain recorded in the immutable audit log.
+            <p className="text-xs text-stone-600 dark:text-stone-400 mb-4 leading-relaxed">
+              Manually reclassify <span className="text-stone-900 dark:text-white font-semibold">“{overrideEvent.title}”</span>. The original AI prediction will remain recorded in the immutable audit log.
             </p>
 
             {!overrideDone ? (
               <div className="space-y-4">
                 <div>
-                  <label htmlFor="override-type" className="mb-1.5 block text-xs font-bold text-stone-400 uppercase tracking-wider">
+                  <label htmlFor="override-type" className="mb-1.5 block text-xs font-bold text-stone-600 dark:text-stone-400 uppercase tracking-wider">
                     Target Event Category
                   </label>
                   <select
@@ -452,8 +452,8 @@ export default function AdminPanel() {
                   </select>
                 </div>
                 <div>
-                  <label htmlFor="override-reason" className="mb-1.5 block text-xs font-bold text-stone-400 uppercase tracking-wider">
-                    Justification Reason <span className="text-red-400">*</span>
+                  <label htmlFor="override-reason" className="mb-1.5 block text-xs font-bold text-stone-600 dark:text-stone-400 uppercase tracking-wider">
+                    Justification Reason <span className="text-red-500">*</span>
                   </label>
                   <textarea
                     id="override-reason"
@@ -469,17 +469,17 @@ export default function AdminPanel() {
                   disabled={!overrideReason.trim() || overrideSaving}
                   className="btn-primary w-full inline-flex items-center justify-center gap-2 text-xs py-2.5 disabled:opacity-50"
                 >
-                  {overrideSaving ? <Loader2 className="w-4 h-4 animate-spin text-[#0f1016]" /> : <Shield className="w-4 h-4" />}
+                  {overrideSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Shield className="w-4 h-4" />}
                   Submit Classification Override
                 </button>
               </div>
             ) : overrideDone.error ? (
-              <div className="rounded-2xl border border-rose-500/20 bg-rose-500/10 p-4 text-xs font-semibold text-rose-300">
+              <div className="rounded-2xl border border-rose-500/20 bg-rose-500/10 p-4 text-xs font-semibold text-rose-700 dark:text-rose-300">
                 {overrideDone.error}
               </div>
             ) : (
               <div className="space-y-3">
-                <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-4 text-xs font-semibold text-emerald-300">
+                <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-4 text-xs font-semibold text-emerald-700 dark:text-emerald-300">
                   Event successfully reclassified as <strong>{overrideDone.summary.event_type}</strong>.
                 </div>
                 <button onClick={closeOverride} className="btn-secondary w-full text-xs py-2.5">

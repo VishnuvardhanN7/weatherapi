@@ -2,9 +2,43 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  /* Default Light Theme Variables */
+  --bg-primary: #F7F7F5;
+  --bg-secondary: #EFEFEA;
+  --surface: #FFFFFF;
+  --surface-elevated: #F4F3EF;
+  --text-primary: #14161F;
+  --text-secondary: #64748B;
+  --border: #E2E8F0;
+  --border-subtle: #F1F5F9;
+  --accent-weather: #0284C7;
+  --accent-warning: #F59E0B;
+  --accent-success: #10B981;
+  --accent-ai: #8B5CF6;
+}
+
+html.dark {
+  /* Dark Theme Variables */
+  --bg-primary: #0b0c10;
+  --bg-secondary: #0e1017;
+  --surface: #13151f;
+  --surface-elevated: #181b26;
+  --text-primary: #faf9f6;
+  --text-secondary: #a3a095;
+  --border: #2a2e40;
+  --border-subtle: #191816;
+  --accent-weather: #38bdf8;
+  --accent-warning: #f59e0b;
+  --accent-success: #10b981;
+  --accent-ai: #a855f7;
+}
+
 @layer base {
   body {
-    @apply bg-[#0b0c10] text-[#e7e5df] antialiased selection:bg-stone-700 selection:text-white;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    @apply antialiased selection:bg-stone-700 selection:text-white transition-colors duration-200;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
   *:focus-visible {
@@ -15,11 +49,13 @@
 @layer components {
   /* Minimalist Editorial Card System */
   .card {
-    @apply bg-[#13151f]/80 backdrop-blur-md border border-stone-800/80 rounded-2xl p-6 shadow-lg transition-all duration-300;
+    background-color: var(--surface);
+    border-color: var(--border);
+    @apply border rounded-2xl p-6 shadow-sm dark:shadow-lg transition-all duration-300;
   }
   
   .card-hover {
-    @apply card hover:border-stone-700 hover:-translate-y-0.5 hover:shadow-xl;
+    @apply card hover:-translate-y-0.5 hover:shadow-md dark:hover:shadow-xl;
   }
 
   .card-editorial-light {
@@ -27,7 +63,7 @@
   }
 
   .card-glass {
-    @apply bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6;
+    @apply bg-white/80 dark:bg-white/5 backdrop-blur-xl border border-stone-200 dark:border-white/10 rounded-2xl p-6;
   }
 
   /* Status Badges */
@@ -35,41 +71,41 @@
     @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold tracking-wide uppercase;
   }
   .badge-low {
-    @apply bg-emerald-500/10 text-emerald-400 border border-emerald-500/20;
+    @apply bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20;
   }
   .badge-moderate {
-    @apply bg-amber-500/10 text-amber-400 border border-amber-500/20;
+    @apply bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20;
   }
   .badge-high {
-    @apply bg-orange-500/10 text-orange-400 border border-orange-500/20;
+    @apply bg-orange-500/10 text-orange-600 dark:text-orange-400 border border-orange-500/20;
   }
   .badge-critical {
-    @apply bg-red-500/10 text-red-400 border border-red-500/20;
+    @apply bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20;
   }
   .badge-pending {
-    @apply bg-sky-500/10 text-sky-400 border border-sky-500/20;
+    @apply bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/20;
   }
   .badge-verified {
-    @apply bg-emerald-500/10 text-emerald-400 border border-emerald-500/20;
+    @apply bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20;
   }
   .badge-rejected {
-    @apply bg-red-500/10 text-red-400 border border-red-500/20;
+    @apply bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20;
   }
 
   /* Buttons */
   .btn-primary {
-    @apply px-5 py-2.5 bg-[#faf9f6] text-[#0f1016] hover:bg-white rounded-full text-sm font-semibold shadow-sm transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply px-5 py-2.5 bg-[#14161f] text-white hover:bg-black dark:bg-[#faf9f6] dark:text-[#0f1016] dark:hover:bg-white rounded-full text-sm font-semibold shadow-sm transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
   }
   .btn-secondary {
-    @apply px-4 py-2 bg-[#181b26] hover:bg-[#222636] text-[#e7e5df] rounded-full text-sm font-medium border border-stone-800 transition-all duration-200 disabled:opacity-50;
+    @apply px-4 py-2 bg-white text-stone-800 border-stone-200 hover:bg-stone-100 dark:bg-[#181b26] dark:hover:bg-[#222636] dark:text-[#e7e5df] dark:border-stone-800 rounded-full text-sm font-medium border shadow-sm dark:shadow-none transition-all duration-200 disabled:opacity-50;
   }
   .btn-danger {
-    @apply px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-full text-sm font-medium border border-red-500/20 transition-all duration-200;
+    @apply px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-600 dark:text-red-400 rounded-full text-sm font-medium border border-red-500/20 transition-all duration-200;
   }
 
   /* Form Elements */
   .input {
-    @apply w-full px-4 py-2.5 bg-[#14161f] border border-stone-800 rounded-xl text-[#faf9f6] placeholder-stone-500 focus:outline-none focus:ring-2 focus:ring-stone-600 focus:border-stone-500 transition-all duration-200;
+    @apply w-full px-4 py-2.5 bg-white dark:bg-[#14161f] border border-stone-200 dark:border-stone-800 rounded-xl text-stone-900 dark:text-[#faf9f6] placeholder-stone-400 dark:placeholder-stone-500 focus:outline-none focus:ring-2 focus:ring-stone-400 dark:focus:ring-stone-600 focus:border-stone-400 dark:focus:border-stone-500 transition-all duration-200 shadow-sm dark:shadow-none;
   }
   .select {
     @apply input appearance-none cursor-pointer pr-8 bg-no-repeat bg-[right_1rem_center];
@@ -78,13 +114,13 @@
 
 @layer utilities {
   .text-gradient {
-    @apply bg-gradient-to-r from-[#faf9f6] via-stone-300 to-stone-400 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-stone-900 via-stone-700 to-stone-600 dark:from-[#faf9f6] dark:via-stone-300 dark:to-stone-400 bg-clip-text text-transparent;
   }
   .text-weather-gradient {
-    @apply bg-gradient-to-r from-sky-400 via-cyan-400 to-indigo-400 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-sky-500 via-cyan-500 to-indigo-500 dark:from-sky-400 dark:via-cyan-400 dark:to-indigo-400 bg-clip-text text-transparent;
   }
   .skip-link {
-    @apply absolute -top-12 left-4 z-[100] bg-[#faf9f6] text-[#0f1016] px-4 py-2 text-xs font-semibold rounded-full shadow-lg transition-all;
+    @apply absolute -top-12 left-4 z-[100] bg-[#14161f] text-white dark:bg-[#faf9f6] dark:text-[#0f1016] px-4 py-2 text-xs font-semibold rounded-full shadow-lg transition-all;
   }
   .skip-link:focus {
     @apply top-4;
@@ -92,26 +128,54 @@
 }
 
 .leaflet-container {
-  background: #11131a !important;
+  background: var(--bg-secondary) !important;
   font-family: 'Plus Jakarta Sans', sans-serif !important;
 }
 
-/* Custom leaflet map tile dark filter */
-.leaflet-tile-pane {
+/* Custom leaflet map tile dark filter in dark mode, crisp clean tiles in light mode */
+html.dark .leaflet-tile-pane {
   filter: brightness(0.7) contrast(1.1) invert(0.9) hue-rotate(190deg) saturate(0.6);
+}
+
+html:not(.dark) .leaflet-tile-pane {
+  filter: none;
+}
+
+/* Custom Leaflet Popup styling for Light & Dark */
+.leaflet-popup-content-wrapper {
+  background-color: var(--surface) !important;
+  color: var(--text-primary) !important;
+  border-radius: 1rem !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15) !important;
+  border: 1px solid var(--border) !important;
+}
+
+.leaflet-popup-tip {
+  background-color: var(--surface) !important;
 }
 
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
-::-webkit-scrollbar-track {
+html.dark ::-webkit-scrollbar-track {
   background: #0e1017;
 }
-::-webkit-scrollbar-thumb {
+html.dark ::-webkit-scrollbar-thumb {
   background: #2a2e40;
   border-radius: 9999px;
 }
-::-webkit-scrollbar-thumb:hover {
+html.dark ::-webkit-scrollbar-thumb:hover {
   background: #3b4059;
+}
+
+html:not(.dark) ::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+html:not(.dark) ::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+html:not(.dark) ::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }

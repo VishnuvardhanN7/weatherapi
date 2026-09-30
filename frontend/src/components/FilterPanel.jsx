@@ -60,16 +60,18 @@ export default function FilterPanel({ filters, onFilterChange, onReset }) {
     ([key, val]) => val !== '' && val !== null && val !== undefined
   );
 
+  const selectStyle = "w-full bg-white dark:bg-[#0e1017] border border-stone-200 dark:border-stone-800 rounded-xl text-stone-900 dark:text-white text-xs px-3 py-2 font-medium focus:border-sky-500 focus:outline-none shadow-sm dark:shadow-none";
+
   return (
-    <div className="bg-[#13151f]/90 border border-stone-800/80 rounded-3xl p-6 sm:p-7 shadow-editorial">
-      <div className="flex items-center justify-between mb-4 pb-3 border-b border-stone-800/60">
+    <div className="bg-white dark:bg-[#13151f]/90 border border-stone-200 dark:border-stone-800/80 rounded-3xl p-6 sm:p-7 shadow-sm dark:shadow-editorial">
+      <div className="flex items-center justify-between mb-4 pb-3 border-b border-stone-200 dark:border-stone-800/60">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-xl bg-stone-800 flex items-center justify-center text-sky-400">
+          <div className="w-8 h-8 rounded-xl bg-stone-100 dark:bg-stone-800 flex items-center justify-center text-sky-600 dark:text-sky-400">
             <Filter className="w-4 h-4" />
           </div>
-          <h3 className="text-sm font-bold text-white tracking-tight">Filter Incidents</h3>
+          <h3 className="text-sm font-bold text-stone-900 dark:text-white tracking-tight">Filter Incidents</h3>
           {activeFilters.length > 0 && (
-            <span className="px-2.5 py-0.5 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-400 text-[10px] font-bold uppercase">
+            <span className="px-2.5 py-0.5 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-600 dark:text-sky-400 text-[10px] font-bold uppercase">
               {activeFilters.length} Active Filters
             </span>
           )}
@@ -78,7 +80,7 @@ export default function FilterPanel({ filters, onFilterChange, onReset }) {
         {activeFilters.length > 0 && (
           <button
             onClick={onReset}
-            className="text-xs font-semibold text-stone-400 hover:text-red-400 flex items-center gap-1 transition-colors"
+            className="text-xs font-semibold text-stone-500 dark:text-stone-400 hover:text-red-600 dark:hover:text-red-400 flex items-center gap-1 transition-colors"
           >
             <X className="w-3.5 h-3.5" /> Reset Filters
           </button>
@@ -87,13 +89,13 @@ export default function FilterPanel({ filters, onFilterChange, onReset }) {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
         <div>
-          <label className="text-[11px] font-bold text-stone-400 mb-1 flex items-center gap-1 uppercase tracking-wider">
-            <Tag className="w-3 h-3 text-stone-500" /> Event Type
+          <label className="text-[11px] font-bold text-stone-500 dark:text-stone-400 mb-1 flex items-center gap-1 uppercase tracking-wider">
+            <Tag className="w-3 h-3 text-stone-400 dark:text-stone-500" /> Event Type
           </label>
           <select
             value={filters.event_type || ''}
             onChange={(e) => handleChange('event_type', e.target.value)}
-            className="w-full bg-[#0e1017] border border-stone-800 rounded-xl text-white text-xs px-3 py-2 font-medium focus:border-sky-500 focus:outline-none"
+            className={selectStyle}
           >
             {EVENT_TYPES.map(opt => (
               <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -102,13 +104,13 @@ export default function FilterPanel({ filters, onFilterChange, onReset }) {
         </div>
 
         <div>
-          <label className="text-[11px] font-bold text-stone-400 mb-1 flex items-center gap-1 uppercase tracking-wider">
-            <AlertTriangle className="w-3 h-3 text-stone-500" /> Severity
+          <label className="text-[11px] font-bold text-stone-500 dark:text-stone-400 mb-1 flex items-center gap-1 uppercase tracking-wider">
+            <AlertTriangle className="w-3 h-3 text-stone-400 dark:text-stone-500" /> Severity
           </label>
           <select
             value={filters.severity || ''}
             onChange={(e) => handleChange('severity', e.target.value)}
-            className="w-full bg-[#0e1017] border border-stone-800 rounded-xl text-white text-xs px-3 py-2 font-medium focus:border-sky-500 focus:outline-none"
+            className={selectStyle}
           >
             {SEVERITY_LEVELS.map(opt => (
               <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -117,13 +119,13 @@ export default function FilterPanel({ filters, onFilterChange, onReset }) {
         </div>
 
         <div>
-          <label className="text-[11px] font-bold text-stone-400 mb-1 flex items-center gap-1 uppercase tracking-wider">
-            <MapPin className="w-3 h-3 text-stone-500" /> State
+          <label className="text-[11px] font-bold text-stone-500 dark:text-stone-400 mb-1 flex items-center gap-1 uppercase tracking-wider">
+            <MapPin className="w-3 h-3 text-stone-400 dark:text-stone-500" /> State
           </label>
           <select
             value={filters.state || ''}
             onChange={(e) => handleChange('state', e.target.value)}
-            className="w-full bg-[#0e1017] border border-stone-800 rounded-xl text-white text-xs px-3 py-2 font-medium focus:border-sky-500 focus:outline-none"
+            className={selectStyle}
           >
             <option value="">All States</option>
             {INDIAN_STATES.filter(Boolean).map(s => (
@@ -133,13 +135,13 @@ export default function FilterPanel({ filters, onFilterChange, onReset }) {
         </div>
 
         <div>
-          <label className="text-[11px] font-bold text-stone-400 mb-1 flex items-center gap-1 uppercase tracking-wider">
-            <Database className="w-3 h-3 text-stone-500" /> Source
+          <label className="text-[11px] font-bold text-stone-500 dark:text-stone-400 mb-1 flex items-center gap-1 uppercase tracking-wider">
+            <Database className="w-3 h-3 text-stone-400 dark:text-stone-500" /> Source
           </label>
           <select
             value={filters.source || ''}
             onChange={(e) => handleChange('source', e.target.value)}
-            className="w-full bg-[#0e1017] border border-stone-800 rounded-xl text-white text-xs px-3 py-2 font-medium focus:border-sky-500 focus:outline-none"
+            className={selectStyle}
           >
             {SOURCES.map(opt => (
               <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -148,39 +150,39 @@ export default function FilterPanel({ filters, onFilterChange, onReset }) {
         </div>
 
         <div>
-          <label className="text-[11px] font-bold text-stone-400 mb-1 flex items-center gap-1 uppercase tracking-wider">
-            <Calendar className="w-3 h-3 text-stone-500" /> Start Date
+          <label className="text-[11px] font-bold text-stone-500 dark:text-stone-400 mb-1 flex items-center gap-1 uppercase tracking-wider">
+            <Calendar className="w-3 h-3 text-stone-400 dark:text-stone-500" /> Start Date
           </label>
           <input
             type="date"
             value={filters.start_date || ''}
             onChange={(e) => handleChange('start_date', e.target.value)}
-            className="w-full bg-[#0e1017] border border-stone-800 rounded-xl text-white text-xs px-3 py-2 font-medium focus:border-sky-500 focus:outline-none"
+            className={selectStyle}
           />
         </div>
 
         <div>
-          <label className="text-[11px] font-bold text-stone-400 mb-1 flex items-center gap-1 uppercase tracking-wider">
-            <Calendar className="w-3 h-3 text-stone-500" /> End Date
+          <label className="text-[11px] font-bold text-stone-500 dark:text-stone-400 mb-1 flex items-center gap-1 uppercase tracking-wider">
+            <Calendar className="w-3 h-3 text-stone-400 dark:text-stone-500" /> End Date
           </label>
           <input
             type="date"
             value={filters.end_date || ''}
             onChange={(e) => handleChange('end_date', e.target.value)}
-            className="w-full bg-[#0e1017] border border-stone-800 rounded-xl text-white text-xs px-3 py-2 font-medium focus:border-sky-500 focus:outline-none"
+            className={selectStyle}
           />
         </div>
 
         <div className="sm:col-span-2">
-          <label className="text-[11px] font-bold text-stone-400 mb-1 flex items-center gap-1 uppercase tracking-wider">
-            <Search className="w-3 h-3 text-stone-500" /> Search Keyword
+          <label className="text-[11px] font-bold text-stone-500 dark:text-stone-400 mb-1 flex items-center gap-1 uppercase tracking-wider">
+            <Search className="w-3 h-3 text-stone-400 dark:text-stone-500" /> Search Keyword
           </label>
           <input
             type="text"
             value={filters.search || ''}
             onChange={(e) => handleChange('search', e.target.value)}
             placeholder="Search titles, descriptions, cities..."
-            className="w-full bg-[#0e1017] border border-stone-800 rounded-xl text-white text-xs px-3 py-2 font-medium focus:border-sky-500 focus:outline-none"
+            className={selectStyle}
           />
         </div>
       </div>

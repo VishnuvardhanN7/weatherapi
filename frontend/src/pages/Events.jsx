@@ -128,13 +128,13 @@ function CitizenReportForm({ onSuccess }) {
 
   if (success) {
     return (
-      <div className="card border-emerald-500/30 bg-[#0e1017]">
+      <div className="card border-emerald-500/30 bg-white dark:bg-[#0e1017]">
         <div className="flex flex-col items-center justify-center py-8 text-center">
           <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-500/10 border border-emerald-500/20">
-            <CheckCircle2 className="h-7 w-7 text-emerald-400" />
+            <CheckCircle2 className="h-7 w-7 text-emerald-600 dark:text-emerald-400" />
           </div>
-          <h3 className="text-xl font-bold text-white mb-2">Report Submitted Successfully</h3>
-          <p className="text-xs text-stone-400 max-w-md mb-4 leading-relaxed">
+          <h3 className="text-xl font-bold text-stone-900 dark:text-white mb-2">Report Submitted Successfully</h3>
+          <p className="text-xs text-stone-600 dark:text-stone-400 max-w-md mb-4 leading-relaxed">
             Your weather observation has been ingested into the system and sent for automated AI verification.
           </p>
           <button onClick={() => setSuccess(false)} className="mt-4 btn-primary">
@@ -146,29 +146,29 @@ function CitizenReportForm({ onSuccess }) {
   }
 
   return (
-    <div className="card bg-[#13151f] border border-stone-800 shadow-editorial p-6 sm:p-8">
+    <div className="card bg-white dark:bg-[#13151f] border border-stone-200 dark:border-stone-800 shadow-sm dark:shadow-editorial p-6 sm:p-8">
       <form ref={formRef} onSubmit={handleSubmit} noValidate>
-        <div className="flex items-center gap-3 mb-6 pb-4 border-b border-stone-800">
-          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-sky-500/10 border border-sky-500/20 text-sky-400">
+        <div className="flex items-center gap-3 mb-6 pb-4 border-b border-stone-200 dark:border-stone-800">
+          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-sky-500/10 border border-sky-500/20 text-sky-600 dark:text-sky-400">
             <Send className="h-5 w-5" />
           </div>
           <div>
-            <h2 className="text-base font-bold text-white tracking-tight">Citizen Weather Observation Report</h2>
-            <p className="text-xs text-stone-400">Contribute severe weather observations from your local area</p>
+            <h2 className="text-base font-bold text-stone-900 dark:text-white tracking-tight">Citizen Weather Observation Report</h2>
+            <p className="text-xs text-stone-600 dark:text-stone-400">Contribute severe weather observations from your local area</p>
           </div>
         </div>
 
         {error && (
           <div className="mb-4 flex items-start gap-3 rounded-2xl border border-red-500/20 bg-red-500/10 px-4 py-3" role="alert">
-            <AlertTriangle className="h-4 w-4 text-red-400 mt-0.5 flex-shrink-0" />
-            <p className="text-xs text-red-300 font-medium">{error}</p>
+            <AlertTriangle className="h-4 w-4 text-red-600 dark:text-red-400 mt-0.5 flex-shrink-0" />
+            <p className="text-xs text-red-700 dark:text-red-300 font-medium">{error}</p>
           </div>
         )}
 
         <div className="space-y-4">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <label htmlFor="report-city" className="block text-xs font-bold text-stone-400 uppercase tracking-wider mb-1.5">
+              <label htmlFor="report-city" className="block text-xs font-bold text-stone-600 dark:text-stone-400 uppercase tracking-wider mb-1.5">
                 City / Town
               </label>
               <input
@@ -179,7 +179,7 @@ function CitizenReportForm({ onSuccess }) {
               />
             </div>
             <div>
-              <label htmlFor="report-state" className="block text-xs font-bold text-stone-400 uppercase tracking-wider mb-1.5">
+              <label htmlFor="report-state" className="block text-xs font-bold text-stone-600 dark:text-stone-400 uppercase tracking-wider mb-1.5">
                 State
               </label>
               <input
@@ -192,8 +192,8 @@ function CitizenReportForm({ onSuccess }) {
           </div>
 
           <div>
-            <label htmlFor="report-title" className="block text-xs font-bold text-stone-400 uppercase tracking-wider mb-1.5">
-              Incident Headline <span className="text-red-400">*</span>
+            <label htmlFor="report-title" className="block text-xs font-bold text-stone-600 dark:text-stone-400 uppercase tracking-wider mb-1.5">
+              Incident Headline <span className="text-red-500">*</span>
             </label>
             <input
               id="report-title"
@@ -207,8 +207,8 @@ function CitizenReportForm({ onSuccess }) {
           </div>
 
           <div>
-            <label htmlFor="report-description" className="block text-xs font-bold text-stone-400 uppercase tracking-wider mb-1.5">
-              Detailed Description <span className="text-red-400">*</span>
+            <label htmlFor="report-description" className="block text-xs font-bold text-stone-600 dark:text-stone-400 uppercase tracking-wider mb-1.5">
+              Detailed Description <span className="text-red-500">*</span>
             </label>
             <textarea
               id="report-description"
@@ -221,7 +221,7 @@ function CitizenReportForm({ onSuccess }) {
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-stone-400 uppercase tracking-wider mb-1.5">
+            <label className="block text-xs font-bold text-stone-600 dark:text-stone-400 uppercase tracking-wider mb-1.5">
               Media Evidence <span className="text-stone-500 font-normal">(Optional)</span>
             </label>
 
@@ -229,35 +229,35 @@ function CitizenReportForm({ onSuccess }) {
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="w-full flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-stone-800 bg-[#0e1017] px-6 py-7 text-center transition-colors hover:border-stone-700 cursor-pointer"
+                className="w-full flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-stone-300 dark:border-stone-800 bg-stone-50 dark:bg-[#0e1017] px-6 py-7 text-center transition-colors hover:border-stone-400 dark:hover:border-stone-700 cursor-pointer"
               >
-                <Camera className="h-7 w-7 text-stone-500 mb-2" />
-                <p className="text-xs text-stone-200 font-bold">Upload Photos or Video</p>
+                <Camera className="h-7 w-7 text-stone-400 dark:text-stone-500 mb-2" />
+                <p className="text-xs text-stone-800 dark:text-stone-200 font-bold">Upload Photos or Video</p>
                 <p className="text-[11px] text-stone-500 mt-1">JPG, PNG, WEBP, GIF, MP4, WEBM (Max 10 MB)</p>
               </button>
             ) : (
-              <div className="flex items-center gap-4 rounded-2xl border border-stone-800 bg-[#0e1017] px-4 py-3">
+              <div className="flex items-center gap-4 rounded-2xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-[#0e1017] px-4 py-3">
                 {previewUrl ? (
-                  <img src={previewUrl} alt="Evidence preview" className="h-14 w-14 rounded-xl object-cover border border-stone-800" />
+                  <img src={previewUrl} alt="Evidence preview" className="h-14 w-14 rounded-xl object-cover border border-stone-200 dark:border-stone-800" />
                 ) : (
-                  <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-stone-800">
-                    <FileVideo className="h-6 w-6 text-stone-400" />
+                  <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-stone-200 dark:bg-stone-800">
+                    <FileVideo className="h-6 w-6 text-stone-600 dark:text-stone-400" />
                   </div>
                 )}
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-bold text-white truncate">{selectedFile.name}</p>
-                  <p className="text-[11px] text-stone-400">{formatFileSize(selectedFile.size)}</p>
+                  <p className="text-xs font-bold text-stone-900 dark:text-white truncate">{selectedFile.name}</p>
+                  <p className="text-[11px] text-stone-500 dark:text-stone-400">{formatFileSize(selectedFile.size)}</p>
                 </div>
                 <button
                   type="button"
                   onClick={removeFile}
-                  className="p-1.5 rounded-full text-stone-400 hover:text-red-400 hover:bg-stone-800 transition-colors"
+                  className="p-1.5 rounded-full text-stone-500 dark:text-stone-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-stone-200 dark:hover:bg-stone-800 transition-colors"
                 >
                   <X className="h-4 w-4" />
                 </button>
               </div>
             )}
-            {fileError && <p className="mt-2 text-xs text-red-400 font-medium">{fileError}</p>}
+            {fileError && <p className="mt-2 text-xs text-red-600 dark:text-red-400 font-medium">{fileError}</p>}
             <input
               ref={fileInputRef}
               type="file"
@@ -269,7 +269,7 @@ function CitizenReportForm({ onSuccess }) {
           </div>
         </div>
 
-        <div className="flex items-center justify-end gap-3 mt-6 pt-4 border-t border-stone-800">
+        <div className="flex items-center justify-end gap-3 mt-6 pt-4 border-t border-stone-200 dark:border-stone-800">
           <button type="submit" disabled={submitting} className="btn-primary inline-flex items-center gap-2 text-xs py-2.5">
             {submitting ? (
               <>
@@ -385,23 +385,23 @@ export default function Events() {
     <div className="space-y-8" role="main" aria-label="Weather Events">
       
       {/* Header Section */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-4 border-b border-stone-800/80">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-4 border-b border-stone-200 dark:border-stone-800/80">
         <div>
-          <h1 className="text-2xl sm:text-3xl lg:text-[34px] font-extrabold text-[#faf9f6] tracking-tight">
+          <h1 className="text-2xl sm:text-3xl lg:text-[34px] font-extrabold text-stone-900 dark:text-[#faf9f6] tracking-tight">
             Weather Events
           </h1>
-          <p className="text-[13px] text-stone-400 mt-1.5 font-normal max-w-2xl leading-relaxed">
+          <p className="text-[13px] text-stone-600 dark:text-stone-400 mt-1.5 font-normal max-w-2xl leading-relaxed">
             Browse and investigate weather events
           </p>
         </div>
 
         <div className="flex items-center gap-3 shrink-0">
           <button onClick={handleReportClick} className="btn-primary inline-flex items-center gap-2 text-xs py-2 px-4">
-            {isAuthenticated ? <Plus className="w-3.5 h-3.5 text-[#0f1016]" /> : <LogIn className="w-3.5 h-3.5 text-[#0f1016]" />}
+            {isAuthenticated ? <Plus className="w-3.5 h-3.5 text-white dark:text-[#0f1016]" /> : <LogIn className="w-3.5 h-3.5 text-white dark:text-[#0f1016]" />}
             <span>{isAuthenticated ? 'Report Weather Incident' : 'Sign in to Report'}</span>
           </button>
           <button onClick={handleExport} className="btn-secondary inline-flex items-center gap-2 text-xs py-2 px-4">
-            <Download className="w-3.5 h-3.5 text-stone-300" />
+            <Download className="w-3.5 h-3.5 text-stone-600 dark:text-stone-300" />
             <span>Export CSV</span>
           </button>
         </div>
@@ -420,7 +420,7 @@ export default function Events() {
 
       {pagination.total_pages > 1 && (
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
-          <p className="text-xs text-stone-400 font-medium">
+          <p className="text-xs text-stone-600 dark:text-stone-400 font-medium">
             Showing {(pagination.page - 1) * pagination.per_page + 1} to{' '}
             {Math.min(pagination.page * pagination.per_page, pagination.total)} of {pagination.total} events
           </p>
@@ -445,8 +445,8 @@ export default function Events() {
                   onClick={() => handlePageChange(pageNum)}
                   className={`w-8 h-8 rounded-full text-xs font-bold transition-all ${
                     pagination.page === pageNum
-                      ? 'bg-[#faf9f6] text-[#0f1016]'
-                      : 'bg-[#141620] text-stone-400 hover:text-white border border-stone-800'
+                      ? 'bg-[#14161f] text-white dark:bg-[#faf9f6] dark:text-[#0f1016]'
+                      : 'bg-white text-stone-700 dark:bg-[#141620] dark:text-stone-400 hover:bg-stone-100 dark:hover:text-white border border-stone-200 dark:border-stone-800'
                   }`}
                 >
                   {pageNum}

@@ -8,37 +8,37 @@ export default function StatsCard({ title, value, subtitle, icon: Icon, trend, t
   const trendNeutral = trend === 'neutral';
 
   return (
-    <div className="group bg-[#13151f]/90 border border-stone-800/80 rounded-3xl p-6 sm:p-7 shadow-editorial hover:border-stone-700/90 hover:-translate-y-1 transition-all duration-300 relative overflow-hidden">
-      {/* Subtle background gradient glow */}
-      <div className="absolute -top-12 -right-12 w-32 h-32 bg-stone-700/10 rounded-full blur-2xl group-hover:bg-stone-500/15 transition-all duration-500 pointer-events-none" />
+    <div className="group bg-white dark:bg-[#13151f]/90 border border-stone-200 dark:border-stone-800/80 rounded-3xl p-6 sm:p-7 shadow-sm dark:shadow-editorial hover:border-stone-300 dark:hover:border-stone-700/90 hover:-translate-y-1 transition-all duration-300 relative overflow-hidden">
+      {/* Subtle background glow */}
+      <div className="absolute -top-12 -right-12 w-32 h-32 bg-stone-200/40 dark:bg-stone-700/10 rounded-full blur-2xl group-hover:bg-stone-300/50 dark:group-hover:bg-stone-500/15 transition-all duration-500 pointer-events-none" />
 
       <div className="flex items-start justify-between relative z-10">
         <div className="flex-1 min-w-0">
-          <p className="text-[11px] font-bold tracking-wider text-stone-400 uppercase mb-2">{title}</p>
-          <p className="text-[30px] sm:text-[34px] font-extrabold text-[#faf9f6] tracking-tight leading-none">
+          <p className="text-[11px] font-bold tracking-wider text-stone-500 dark:text-stone-400 uppercase mb-2">{title}</p>
+          <p className="text-[30px] sm:text-[34px] font-extrabold text-stone-900 dark:text-[#faf9f6] tracking-tight leading-none">
             {value}
           </p>
           {subtitle && (
-            <p className="text-[11px] text-stone-400 font-medium mt-2">{subtitle}</p>
+            <p className="text-[11px] text-stone-500 dark:text-stone-400 font-medium mt-2">{subtitle}</p>
           )}
         </div>
         {Icon && (
-          <div className="w-11 h-11 rounded-2xl bg-[#1a1d2b] border border-stone-800 flex items-center justify-center text-stone-200 group-hover:scale-110 transition-transform duration-300 shrink-0">
-            <Icon className="w-5 h-5 text-stone-300" />
+          <div className="w-11 h-11 rounded-2xl bg-stone-100 dark:bg-[#1a1d2b] border border-stone-200 dark:border-stone-800 flex items-center justify-center text-stone-700 dark:text-stone-200 group-hover:scale-110 transition-transform duration-300 shrink-0">
+            <Icon className="w-5 h-5 text-stone-700 dark:text-stone-300" />
           </div>
         )}
       </div>
 
       {trendValue !== undefined && (
-        <div className="flex items-center gap-1.5 mt-5 pt-3 border-t border-stone-800/60 relative z-10">
-          {trendUp && <TrendingUp className="w-3.5 h-3.5 text-emerald-400" />}
-          {trendDown && <TrendingDown className="w-3.5 h-3.5 text-red-400" />}
-          {trendNeutral && <Minus className="w-3.5 h-3.5 text-stone-400" />}
+        <div className="flex items-center gap-1.5 mt-5 pt-3 border-t border-stone-200 dark:border-stone-800/60 relative z-10">
+          {trendUp && <TrendingUp className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />}
+          {trendDown && <TrendingDown className="w-3.5 h-3.5 text-red-600 dark:text-red-400" />}
+          {trendNeutral && <Minus className="w-3.5 h-3.5 text-stone-500 dark:text-stone-400" />}
           <span className={clsx(
             'text-xs font-semibold',
-            trendUp && 'text-emerald-400',
-            trendDown && 'text-red-400',
-            trendNeutral && 'text-stone-400'
+            trendUp && 'text-emerald-600 dark:text-emerald-400',
+            trendDown && 'text-red-600 dark:text-red-400',
+            trendNeutral && 'text-stone-500 dark:text-stone-400'
           )}>
             {trendValue}
           </span>

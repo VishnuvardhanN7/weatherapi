@@ -84,35 +84,35 @@ export default function AlertPreferences({ open, onClose }) {
 
   return (
     <div className="fixed inset-0 z-50">
-      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
-      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-[#0e1017] border border-stone-800 rounded-3xl p-6 sm:p-8 shadow-editorial">
-        <div className="flex items-center justify-between mb-6 pb-4 border-b border-stone-800">
+      <div className="absolute inset-0 bg-black/60 dark:bg-black/70 backdrop-blur-sm" onClick={onClose} />
+      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white dark:bg-[#0e1017] border border-stone-200 dark:border-stone-800 rounded-3xl p-6 sm:p-8 shadow-xl dark:shadow-editorial">
+        <div className="flex items-center justify-between mb-6 pb-4 border-b border-stone-200 dark:border-stone-800">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-full bg-stone-800 flex items-center justify-center text-sky-400">
+            <div className="w-8 h-8 rounded-full bg-stone-100 dark:bg-stone-800 flex items-center justify-center text-sky-600 dark:text-sky-400">
               <SlidersHorizontal className="w-4 h-4" />
             </div>
-            <h2 className="text-base font-bold text-white tracking-tight">Weather Alert Preferences</h2>
+            <h2 className="text-base font-bold text-stone-900 dark:text-white tracking-tight">Weather Alert Preferences</h2>
           </div>
-          <button onClick={onClose} className="p-2 rounded-full hover:bg-stone-800 text-stone-400 hover:text-white transition-colors">
+          <button onClick={onClose} className="p-2 rounded-full hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-500 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white transition-colors">
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {loading ? (
           <div className="flex justify-center py-8">
-            <Loader2 className="w-6 h-6 animate-spin text-sky-400" />
+            <Loader2 className="w-6 h-6 animate-spin text-sky-600 dark:text-sky-400" />
           </div>
         ) : (
           <div className="space-y-5">
             {error && (
-              <div className="flex items-start gap-2 p-3 bg-red-500/10 border border-red-500/20 rounded-2xl text-red-300 text-xs font-medium">
-                <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5 text-red-400" />
+              <div className="flex items-start gap-2 p-3 bg-red-500/10 border border-red-500/20 rounded-2xl text-red-600 dark:text-red-300 text-xs font-medium">
+                <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5 text-red-600 dark:text-red-400" />
                 {error}
               </div>
             )}
 
             <div>
-              <label className="text-xs font-bold text-stone-400 uppercase tracking-wider mb-2 block">
+              <label className="text-xs font-bold text-stone-600 dark:text-stone-400 uppercase tracking-wider mb-2 block">
                 Target Monitoring Location
               </label>
               <div className="flex flex-col gap-2">
@@ -121,11 +121,11 @@ export default function AlertPreferences({ open, onClose }) {
                   disabled={locating}
                   className="btn-secondary inline-flex items-center justify-center gap-2 text-xs py-2.5"
                 >
-                  {locating ? <Loader2 className="w-4 h-4 animate-spin" /> : <LocateFixed className="w-4 h-4 text-sky-400" />}
+                  {locating ? <Loader2 className="w-4 h-4 animate-spin" /> : <LocateFixed className="w-4 h-4 text-sky-600 dark:text-sky-400" />}
                   <span>Use Current Device Location</span>
                 </button>
                 {prefs.notification_lat != null && (
-                  <p className="text-[11px] font-mono text-stone-400 text-center mt-1">
+                  <p className="text-[11px] font-mono text-stone-500 dark:text-stone-400 text-center mt-1">
                     Lat: {prefs.notification_lat.toFixed(4)} · Lng: {prefs.notification_lng.toFixed(4)}
                   </p>
                 )}
@@ -133,7 +133,7 @@ export default function AlertPreferences({ open, onClose }) {
             </div>
 
             <div>
-              <label className="text-xs font-bold text-stone-400 uppercase tracking-wider mb-2 block">Geofence Alert Radius</label>
+              <label className="text-xs font-bold text-stone-600 dark:text-stone-400 uppercase tracking-wider mb-2 block">Geofence Alert Radius</label>
               <div className="flex gap-2 flex-wrap">
                 {RADIUS_OPTIONS.map((r) => (
                   <button
@@ -141,8 +141,8 @@ export default function AlertPreferences({ open, onClose }) {
                     onClick={() => setPrefs((p) => ({ ...p, notification_radius_km: r }))}
                     className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all ${
                       prefs.notification_radius_km === r
-                        ? 'bg-[#faf9f6] text-[#0f1016] shadow-sm'
-                        : 'bg-[#141620] border border-stone-800 text-stone-400 hover:text-white'
+                        ? 'bg-[#14161f] text-white dark:bg-[#faf9f6] dark:text-[#0f1016] shadow-sm'
+                        : 'bg-stone-100 dark:bg-[#141620] border border-stone-200 dark:border-stone-800 text-stone-700 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white'
                     }`}
                   >
                     {r} km
@@ -151,10 +151,10 @@ export default function AlertPreferences({ open, onClose }) {
               </div>
             </div>
 
-            <div className="flex items-center justify-between p-4 bg-[#141620] border border-stone-800 rounded-2xl">
+            <div className="flex items-center justify-between p-4 bg-stone-50 dark:bg-[#141620] border border-stone-200 dark:border-stone-800 rounded-2xl">
               <div>
-                <p className="text-xs font-bold text-white">Enable Real-Time Alerts</p>
-                <p className="text-[11px] text-stone-400 mt-0.5">
+                <p className="text-xs font-bold text-stone-900 dark:text-white">Enable Real-Time Alerts</p>
+                <p className="text-[11px] text-stone-500 dark:text-stone-400 mt-0.5">
                   High & Critical severity events within radius
                 </p>
               </div>
@@ -168,18 +168,18 @@ export default function AlertPreferences({ open, onClose }) {
                     else setPrefs((p) => ({ ...p, notification_consent: false }));
                   }}
                 />
-                <div className="w-10 h-5 bg-stone-800 peer-focus:outline-none rounded-full peer peer-checked:bg-sky-500 after:content-[''] after:absolute after:top-[3px] after:left-[3px] after:bg-white after:rounded-full after:h-3.5 after:w-3.5 after:transition-all peer-checked:after:translate-x-5" />
+                <div className="w-10 h-5 bg-stone-300 dark:bg-stone-800 peer-focus:outline-none rounded-full peer peer-checked:bg-sky-500 after:content-[''] after:absolute after:top-[3px] after:left-[3px] after:bg-white after:rounded-full after:h-3.5 after:w-3.5 after:transition-all peer-checked:after:translate-x-5" />
               </label>
             </div>
 
-            <div className="flex justify-end gap-3 pt-3 border-t border-stone-800">
+            <div className="flex justify-end gap-3 pt-3 border-t border-stone-200 dark:border-stone-800">
               <button onClick={onClose} className="btn-secondary text-xs">Cancel</button>
               <button
                 onClick={save}
                 disabled={saving}
                 className="btn-primary text-xs inline-flex items-center gap-2"
               >
-                {saving && <Loader2 className="w-3.5 h-3.5 animate-spin text-[#0f1016]" />}
+                {saving && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
                 Save Preferences
               </button>
             </div>

@@ -72,33 +72,33 @@ function MediaEvidence({ event }) {
 
   return (
     <div className="mt-4">
-      <h4 className="text-[11px] font-bold text-stone-400 uppercase tracking-widest mb-2">Media Evidence</h4>
+      <h4 className="text-[11px] font-bold text-stone-500 dark:text-stone-400 uppercase tracking-widest mb-2">Media Evidence</h4>
       {!loaded ? (
-        <div className="flex items-center gap-2 text-xs text-stone-400">
+        <div className="flex items-center gap-2 text-xs text-stone-500 dark:text-stone-400">
           <Loader2 className="w-3.5 h-3.5 animate-spin" />
           Loading evidence media...
         </div>
       ) : items.length === 0 ? (
-        <p className="text-xs text-stone-500">No media attached.</p>
+        <p className="text-xs text-stone-500 font-medium">No media attached.</p>
       ) : (
         <div className="flex flex-wrap gap-3">
           {items.map((m) =>
             m.failed ? (
               <div
                 key={m.id}
-                className="h-24 w-36 rounded-2xl border border-stone-800 bg-[#0e1017] flex flex-col items-center justify-center text-center p-2"
+                className="h-24 w-36 rounded-2xl border border-stone-200 dark:border-stone-800 bg-stone-100 dark:bg-[#0e1017] flex flex-col items-center justify-center text-center p-2"
               >
-                <Image className="h-5 w-5 text-stone-500 mb-1" />
+                <Image className="h-5 w-5 text-stone-400 dark:text-stone-500 mb-1" />
                 <span className="text-[10px] text-stone-500">Evidence unavailable</span>
               </div>
             ) : m.kind === 'video' ? (
-              <video key={m.id} src={m.objectUrl} controls className="h-24 w-36 object-cover rounded-2xl border border-stone-800" />
+              <video key={m.id} src={m.objectUrl} controls className="h-24 w-36 object-cover rounded-2xl border border-stone-200 dark:border-stone-800" />
             ) : (
               <img
                 key={m.id}
                 src={m.objectUrl}
                 alt="Weather evidence"
-                className="h-24 w-36 object-cover rounded-2xl border border-stone-800"
+                className="h-24 w-36 object-cover rounded-2xl border border-stone-200 dark:border-stone-800"
               />
             )
           )}
@@ -114,21 +114,21 @@ function SourceBlock({ event }) {
   const handle = details.handle;
   return (
     <div>
-      <h4 className="text-[11px] font-bold text-stone-400 uppercase tracking-widest mb-2">Source</h4>
-      <dl className="text-xs space-y-1.5 text-stone-300">
+      <h4 className="text-[11px] font-bold text-stone-500 dark:text-stone-400 uppercase tracking-widest mb-2">Source</h4>
+      <dl className="text-xs space-y-1.5 text-stone-700 dark:text-stone-300">
         <div className="flex gap-2">
           <dt className="text-stone-500 font-medium">Platform:</dt>
-          <dd className="font-semibold text-white">{details.platform || details.display || event.source}</dd>
+          <dd className="font-semibold text-stone-900 dark:text-white">{details.platform || details.display || event.source}</dd>
         </div>
         {name && (
           <div className="flex gap-2 items-center">
-            <AtSign className="w-3.5 h-3.5 text-stone-500 flex-shrink-0" />
+            <AtSign className="w-3.5 h-3.5 text-stone-400 dark:text-stone-500 flex-shrink-0" />
             <dd className="capitalize font-semibold">{name}</dd>
           </div>
         )}
         {handle && (
           <div className="flex gap-2 items-center">
-            <User className="w-3.5 h-3.5 text-stone-500 flex-shrink-0" />
+            <User className="w-3.5 h-3.5 text-stone-400 dark:text-stone-500 flex-shrink-0" />
             <dd>@{handle}</dd>
           </div>
         )}
@@ -146,9 +146,9 @@ function SourceBlock({ event }) {
         )}
         {event.verified_by_name && (
           <div className="flex gap-2 items-center">
-            <Shield className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
+            <Shield className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 flex-shrink-0" />
             <dt className="text-stone-500">Verified by:</dt>
-            <dd className="text-emerald-400 font-semibold">{event.verified_by_name}</dd>
+            <dd className="text-emerald-600 dark:text-emerald-400 font-semibold">{event.verified_by_name}</dd>
           </div>
         )}
       </dl>
@@ -185,8 +185,8 @@ export default function EventTable({ events = [], onVerify, onDelete, onViewInte
   const renderSortIcon = (key) => {
     if (sortKey !== key) return null;
     return sortDir === 'asc'
-      ? <ChevronUp className="w-3.5 h-3.5 inline ml-1 text-sky-400" />
-      : <ChevronDown className="w-3.5 h-3.5 inline ml-1 text-sky-400" />;
+      ? <ChevronUp className="w-3.5 h-3.5 inline ml-1 text-sky-600 dark:text-sky-400" />
+      : <ChevronDown className="w-3.5 h-3.5 inline ml-1 text-sky-600 dark:text-sky-400" />;
   };
 
   if (loading) {
@@ -194,7 +194,7 @@ export default function EventTable({ events = [], onVerify, onDelete, onViewInte
       <div className="card">
         <div className="animate-pulse space-y-4">
           {[...Array(5)].map((_, i) => (
-            <div key={i} className="h-12 bg-stone-800/50 rounded-2xl" />
+            <div key={i} className="h-12 bg-stone-200 dark:bg-stone-800/50 rounded-2xl" />
           ))}
         </div>
       </div>
@@ -202,11 +202,11 @@ export default function EventTable({ events = [], onVerify, onDelete, onViewInte
   }
 
   return (
-    <div className="card overflow-hidden p-0 border border-stone-800/90 shadow-editorial">
+    <div className="card overflow-hidden p-0 border border-stone-200 dark:border-stone-800/90 shadow-sm dark:shadow-editorial">
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-stone-800 bg-[#0e1017]">
+            <tr className="border-b border-stone-200 dark:border-stone-800 bg-stone-100 dark:bg-[#0e1017]">
               {selectable && (
                 <th className="px-4 py-3.5 w-10">
                   <button
@@ -215,7 +215,7 @@ export default function EventTable({ events = [], onVerify, onDelete, onViewInte
                       'w-5 h-5 rounded-md border flex items-center justify-center transition-colors',
                       selectedIds?.size === events.length && events.length > 0
                         ? 'bg-sky-500 border-sky-500'
-                        : 'border-stone-700 hover:border-stone-500'
+                        : 'border-stone-300 dark:border-stone-700 hover:border-stone-400 dark:hover:border-stone-500'
                     )}
                     aria-label="Select all events"
                   >
@@ -230,8 +230,8 @@ export default function EventTable({ events = [], onVerify, onDelete, onViewInte
                   key={col.key}
                   onClick={() => col.sortable && handleSort(col.key)}
                   className={clsx(
-                    'px-4 py-3.5 text-left text-[11px] font-bold text-stone-400 uppercase tracking-widest',
-                    col.sortable && 'cursor-pointer hover:text-white select-none',
+                    'px-4 py-3.5 text-left text-[11px] font-bold text-stone-600 dark:text-stone-400 uppercase tracking-widest',
+                    col.sortable && 'cursor-pointer hover:text-stone-900 dark:hover:text-white select-none',
                     col.width
                   )}
                 >
@@ -241,7 +241,7 @@ export default function EventTable({ events = [], onVerify, onDelete, onViewInte
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-stone-800/60 bg-[#13151f]/60">
+          <tbody className="divide-y divide-stone-200 dark:divide-stone-800/60 bg-white dark:bg-[#13151f]/60">
             {sorted.map((event) => {
               const StatusIcon = STATUS_ICONS[event.verification_status] || Clock;
               return (
@@ -249,7 +249,7 @@ export default function EventTable({ events = [], onVerify, onDelete, onViewInte
                   <tr
                     className={clsx(
                       'transition-colors',
-                      selectedIds?.has(event.id) ? 'bg-sky-500/10' : 'hover:bg-stone-800/40',
+                      selectedIds?.has(event.id) ? 'bg-sky-50 dark:bg-sky-500/10' : 'hover:bg-stone-50 dark:hover:bg-stone-800/40',
                       'cursor-pointer'
                     )}
                   >
@@ -260,7 +260,7 @@ export default function EventTable({ events = [], onVerify, onDelete, onViewInte
                             'w-5 h-5 rounded-md border flex items-center justify-center transition-colors',
                             selectedIds?.has(event.id)
                               ? 'bg-sky-500 border-sky-500'
-                              : 'border-stone-700 hover:border-stone-500'
+                              : 'border-stone-300 dark:border-stone-700 hover:border-stone-400 dark:hover:border-stone-500'
                           )}
                           aria-label={`Select event: ${event.title}`}
                         >
@@ -271,21 +271,21 @@ export default function EventTable({ events = [], onVerify, onDelete, onViewInte
                       </td>
                     )}
                     <td className="px-4 py-3.5 max-w-xs" onClick={() => setExpandedRow(expandedRow === event.id ? null : event.id)}>
-                      <p className="font-bold text-white truncate group-hover:text-sky-300">{event.title}</p>
-                      <p className="text-xs text-stone-400 truncate mt-0.5">{event.description?.slice(0, 80)}...</p>
+                      <p className="font-bold text-stone-900 dark:text-white truncate group-hover:text-sky-600 dark:group-hover:text-sky-300">{event.title}</p>
+                      <p className="text-xs text-stone-500 dark:text-stone-400 truncate mt-0.5">{event.description?.slice(0, 80)}...</p>
                     </td>
                     <td className="px-4 py-3.5" onClick={() => setExpandedRow(expandedRow === event.id ? null : event.id)}>
-                      <span className="capitalize text-stone-300 font-medium">{event.event_type?.replace('_', ' ')}</span>
+                      <span className="capitalize text-stone-700 dark:text-stone-300 font-medium">{event.event_type?.replace('_', ' ')}</span>
                     </td>
                     <td className="px-4 py-3.5" onClick={() => setExpandedRow(expandedRow === event.id ? null : event.id)}>
                       <span className={clsx('badge', SEVERITY_STYLES[event.severity])}>
                         {event.severity}
                       </span>
                     </td>
-                    <td className="px-4 py-3.5 text-stone-300" onClick={() => setExpandedRow(expandedRow === event.id ? null : event.id)}>{event.city || '-'}</td>
-                    <td className="px-4 py-3.5 text-stone-300" onClick={() => setExpandedRow(expandedRow === event.id ? null : event.id)}>{event.state || '-'}</td>
+                    <td className="px-4 py-3.5 text-stone-700 dark:text-stone-300" onClick={() => setExpandedRow(expandedRow === event.id ? null : event.id)}>{event.city || '-'}</td>
+                    <td className="px-4 py-3.5 text-stone-700 dark:text-stone-300" onClick={() => setExpandedRow(expandedRow === event.id ? null : event.id)}>{event.state || '-'}</td>
                     <td className="px-4 py-3.5" onClick={() => setExpandedRow(expandedRow === event.id ? null : event.id)}>
-                      <span className="capitalize text-stone-400 font-medium">{event.source?.replace('_', ' ')}</span>
+                      <span className="capitalize text-stone-500 dark:text-stone-400 font-medium">{event.source?.replace('_', ' ')}</span>
                     </td>
                     <td className="px-4 py-3.5" onClick={() => setExpandedRow(expandedRow === event.id ? null : event.id)}>
                       <span className={clsx('badge inline-flex items-center gap-1.5', STATUS_STYLES[event.verification_status])}>
@@ -293,25 +293,25 @@ export default function EventTable({ events = [], onVerify, onDelete, onViewInte
                         {event.verification_status?.replace('_', ' ')}
                       </span>
                     </td>
-                    <td className="px-4 py-3.5 text-stone-400 text-xs whitespace-nowrap font-medium" onClick={() => setExpandedRow(expandedRow === event.id ? null : event.id)}>
+                    <td className="px-4 py-3.5 text-stone-500 dark:text-stone-400 text-xs whitespace-nowrap font-medium" onClick={() => setExpandedRow(expandedRow === event.id ? null : event.id)}>
                       {dayjs(event.reported_at).format('DD MMM, HH:mm')}
                     </td>
                   </tr>
 
                   {expandedRow === event.id && (
-                    <tr className="bg-[#0e1017]/90 border-l-2 border-sky-400">
+                    <tr className="bg-stone-50 dark:bg-[#0e1017]/90 border-l-4 border-sky-500 dark:border-sky-400">
                       <td colSpan={selectable ? 9 : 8} className="px-6 py-5">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                           <div>
-                            <h4 className="text-[11px] font-bold text-stone-400 uppercase tracking-widest mb-2">Description</h4>
-                            <p className="text-xs text-stone-200 leading-relaxed">{event.description}</p>
+                            <h4 className="text-[11px] font-bold text-stone-500 dark:text-stone-400 uppercase tracking-widest mb-2">Description</h4>
+                            <p className="text-xs text-stone-800 dark:text-stone-200 leading-relaxed">{event.description}</p>
                           </div>
                           <div>
-                            <h4 className="text-[11px] font-bold text-stone-400 uppercase tracking-widest mb-2">Geospatial Details</h4>
-                            <dl className="text-xs space-y-1.5 text-stone-300">
+                            <h4 className="text-[11px] font-bold text-stone-500 dark:text-stone-400 uppercase tracking-widest mb-2">Geospatial Details</h4>
+                            <dl className="text-xs space-y-1.5 text-stone-700 dark:text-stone-300">
                               <div className="flex gap-2">
                                 <dt className="text-stone-500 font-medium">Coordinates:</dt>
-                                <dd className="font-semibold">
+                                <dd className="font-semibold text-stone-900 dark:text-white">
                                   {event.latitude != null && event.longitude != null
                                     ? `${event.latitude.toFixed(4)}, ${event.longitude.toFixed(4)}`
                                     : 'Not available'}
@@ -319,11 +319,11 @@ export default function EventTable({ events = [], onVerify, onDelete, onViewInte
                               </div>
                               <div className="flex gap-2">
                                 <dt className="text-stone-500 font-medium">Misinfo Score:</dt>
-                                <dd className="font-semibold text-rose-400">{(event.fake_confidence * 100).toFixed(1)}%</dd>
+                                <dd className="font-semibold text-rose-600 dark:text-rose-400">{(event.fake_confidence * 100).toFixed(1)}%</dd>
                               </div>
                               <div className="flex gap-2">
                                 <dt className="text-stone-500 font-medium">Classification Conf:</dt>
-                                <dd className="font-semibold text-sky-400">{(event.category_confidence * 100).toFixed(1)}%</dd>
+                                <dd className="font-semibold text-sky-600 dark:text-sky-400">{(event.category_confidence * 100).toFixed(1)}%</dd>
                               </div>
                             </dl>
                           </div>
@@ -332,7 +332,7 @@ export default function EventTable({ events = [], onVerify, onDelete, onViewInte
 
                         <MediaEvidence event={event} />
 
-                        <div className="flex gap-3 flex-wrap mt-5 pt-4 border-t border-stone-800">
+                        <div className="flex gap-3 flex-wrap mt-5 pt-4 border-t border-stone-200 dark:border-stone-800">
                           {event.source_url && (
                             <a
                               href={event.source_url}
@@ -350,7 +350,7 @@ export default function EventTable({ events = [], onVerify, onDelete, onViewInte
                                 onClick={(e) => { e.stopPropagation(); onVerify(event.id, 'verified'); }}
                                 className="btn-primary text-xs inline-flex items-center gap-1.5"
                               >
-                                <CheckCircle className="w-3.5 h-3.5 text-emerald-600" /> Verify
+                                <CheckCircle className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-600" /> Verify
                               </button>
                               <button
                                 onClick={(e) => { e.stopPropagation(); onVerify(event.id, 'rejected'); }}
@@ -366,7 +366,7 @@ export default function EventTable({ events = [], onVerify, onDelete, onViewInte
                               className="btn-secondary text-xs inline-flex items-center gap-1.5"
                               aria-label={`View AI intelligence for: ${event.title}`}
                             >
-                              <Shield className="w-3.5 h-3.5 text-sky-400" /> AI Intelligence Dossier
+                              <Shield className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400" /> AI Intelligence Dossier
                             </button>
                           )}
                           {onDelete && (

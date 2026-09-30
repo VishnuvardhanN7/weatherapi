@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { CloudSun, Eye, EyeOff, AlertCircle, Loader2, Lock, UserCheck } from 'lucide-react';
+import { CloudSun, Eye, EyeOff, AlertCircle, Loader2 } from 'lucide-react';
 import { api } from '../services/api.js';
 import { consumeReturnTo } from '../services/api.js';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -98,29 +98,29 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0b0c10] text-[#e7e5df] flex items-center justify-center p-4 sm:p-6">
+    <div className="min-h-screen bg-[#F7F7F5] dark:bg-[#0b0c10] text-[#14161f] dark:text-[#e7e5df] flex items-center justify-center p-4 sm:p-6 transition-colors duration-200">
       <div className="w-full max-w-md">
         
         {/* Brand Header */}
         <div className="text-center mb-8">
-          <div className="w-14 h-14 rounded-3xl bg-[#faf9f6] flex items-center justify-center text-[#0f1016] mx-auto mb-4 shadow-xl">
-            <CloudSun className="w-7 h-7 text-[#0f1016]" />
+          <div className="w-14 h-14 rounded-3xl bg-[#14161f] dark:bg-[#faf9f6] text-white dark:text-[#0f1016] flex items-center justify-center mx-auto mb-4 shadow-lg">
+            <CloudSun className="w-7 h-7 text-white dark:text-[#0f1016]" />
           </div>
-          <h1 className="text-2xl font-extrabold text-[#faf9f6] tracking-tight">ATMOS Intel Portal</h1>
-          <p className="text-xs text-stone-400 mt-1.5 font-medium">
+          <h1 className="text-2xl font-extrabold text-stone-900 dark:text-[#faf9f6] tracking-tight">ATMOS Intel Portal</h1>
+          <p className="text-xs text-stone-600 dark:text-stone-400 mt-1.5 font-medium">
             National Severe Weather Big Data & Analytics Platform
           </p>
         </div>
 
-        <div className="card bg-[#13151f] border border-stone-800 shadow-editorial p-6 sm:p-8">
+        <div className="card bg-white dark:bg-[#13151f] border border-stone-200 dark:border-stone-800 shadow-sm dark:shadow-editorial p-6 sm:p-8">
           {/* Tab Selector */}
-          <div className="flex p-1 bg-[#0e1017] rounded-full border border-stone-800 mb-6">
+          <div className="flex p-1 bg-stone-100 dark:bg-[#0e1017] rounded-full border border-stone-200 dark:border-stone-800 mb-6">
             <button
               onClick={() => { setIsRegister(false); setError(''); }}
               className={`flex-1 py-2 text-xs font-bold rounded-full transition-all ${
                 !isRegister
-                  ? 'bg-[#faf9f6] text-[#0f1016] shadow-sm'
-                  : 'text-stone-400 hover:text-white'
+                  ? 'bg-[#14161f] text-white dark:bg-[#faf9f6] dark:text-[#0f1016] shadow-sm'
+                  : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white'
               }`}
             >
               Sign In
@@ -129,8 +129,8 @@ export default function Login() {
               onClick={() => { setIsRegister(true); setError(''); }}
               className={`flex-1 py-2 text-xs font-bold rounded-full transition-all ${
                 isRegister
-                  ? 'bg-[#faf9f6] text-[#0f1016] shadow-sm'
-                  : 'text-stone-400 hover:text-white'
+                  ? 'bg-[#14161f] text-white dark:bg-[#faf9f6] dark:text-[#0f1016] shadow-sm'
+                  : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white'
               }`}
             >
               Register
@@ -138,15 +138,15 @@ export default function Login() {
           </div>
 
           {error && (
-            <div className="flex items-center gap-2 p-3 mb-4 bg-red-500/10 border border-red-500/20 rounded-2xl text-red-300 text-xs font-medium">
-              <AlertCircle className="w-4 h-4 flex-shrink-0 text-red-400" />
+            <div className="flex items-center gap-2 p-3 mb-4 bg-red-500/10 border border-red-500/20 rounded-2xl text-red-600 dark:text-red-300 text-xs font-medium">
+              <AlertCircle className="w-4 h-4 flex-shrink-0 text-red-600 dark:text-red-400" />
               {error}
             </div>
           )}
 
           {sessionExpired && !error && (
-            <div className="flex items-center gap-2 p-3 mb-4 bg-amber-500/10 border border-amber-500/20 rounded-2xl text-amber-300 text-xs font-medium">
-              <AlertCircle className="w-4 h-4 flex-shrink-0 text-amber-400" />
+            <div className="flex items-center gap-2 p-3 mb-4 bg-amber-500/10 border border-amber-500/20 rounded-2xl text-amber-700 dark:text-amber-300 text-xs font-medium">
+              <AlertCircle className="w-4 h-4 flex-shrink-0 text-amber-600 dark:text-amber-400" />
               Your session expired. Please sign in again.
             </div>
           )}
@@ -154,7 +154,7 @@ export default function Login() {
           <form onSubmit={isRegister ? handleRegister : handleLogin} className="space-y-4">
             {isRegister && (
               <div>
-                <label className="text-[11px] font-bold text-stone-400 uppercase tracking-wider mb-1 block">Full Name</label>
+                <label className="text-[11px] font-bold text-stone-600 dark:text-stone-400 uppercase tracking-wider mb-1 block">Full Name</label>
                 <input
                   type="text"
                   name="full_name"
@@ -167,7 +167,7 @@ export default function Login() {
             )}
 
             <div>
-              <label className="text-[11px] font-bold text-stone-400 uppercase tracking-wider mb-1 block">Username</label>
+              <label className="text-[11px] font-bold text-stone-600 dark:text-stone-400 uppercase tracking-wider mb-1 block">Username</label>
               <input
                 type="text"
                 name="username"
@@ -181,7 +181,7 @@ export default function Login() {
 
             {isRegister && (
               <div>
-                <label className="text-[11px] font-bold text-stone-400 uppercase tracking-wider mb-1 block">Email Address</label>
+                <label className="text-[11px] font-bold text-stone-600 dark:text-stone-400 uppercase tracking-wider mb-1 block">Email Address</label>
                 <input
                   type="email"
                   name="email"
@@ -195,7 +195,7 @@ export default function Login() {
             )}
 
             <div>
-              <label className="text-[11px] font-bold text-stone-400 uppercase tracking-wider mb-1 block">Password</label>
+              <label className="text-[11px] font-bold text-stone-600 dark:text-stone-400 uppercase tracking-wider mb-1 block">Password</label>
               <div className="relative">
                 <input
                   type={showPassword ? 'text' : 'password'}
@@ -209,7 +209,7 @@ export default function Login() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-white"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700 dark:hover:text-white"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -224,7 +224,7 @@ export default function Login() {
             >
               {loading ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin text-[#0f1016]" />
+                  <Loader2 className="w-4 h-4 animate-spin" />
                   {isRegister ? 'Creating Account...' : 'Signing in...'}
                 </>
               ) : (
@@ -233,7 +233,7 @@ export default function Login() {
             </button>
           </form>
 
-          <div className="mt-6 pt-4 border-t border-stone-800 text-center">
+          <div className="mt-6 pt-4 border-t border-stone-200 dark:border-stone-800 text-center">
             <p className="text-[11px] text-stone-500 font-medium">
               Public weather observations are accessible as guest. Sign in to submit and verify incidents.
             </p>

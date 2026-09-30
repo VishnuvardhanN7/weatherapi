@@ -8,6 +8,7 @@ import AdminPanel from './pages/AdminPanel.jsx';
 import IncidentIntelligence from './pages/IncidentIntelligence.jsx';
 import Login from './pages/Login.jsx';
 import { AuthProvider, useAuth } from './context/AuthContext.jsx';
+import { ThemeProvider } from './context/ThemeContext.jsx';
 
 function AdminRoute({ children }) {
   const { user, isAuthenticated, loading } = useAuth();
@@ -101,10 +102,12 @@ function AppRoutes() {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <AppRoutes />
-      </Router>
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <Router>
+          <AppRoutes />
+        </Router>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
